@@ -257,7 +257,7 @@ removeButton.addEventListener("click", () => {
 // The page remains usable when service workers are unsupported.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+    navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' }).then(reg => reg.update().catch(() => {})).catch(() => {});
   });
 }
 
