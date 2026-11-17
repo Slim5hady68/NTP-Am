@@ -1,6 +1,6 @@
 /* NTPure Web v2.0: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpure-2.2-wallpaper-restore8';
+const VERSION = 'ntpure-2.2-wallpaper-restore9';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js', './settings-ui.js', './wallpaper.js'];
@@ -53,9 +53,13 @@ async function shellResponse(request, event) {
     if (response.ok) await cache.put(request, response.clone()).catch(() => {});
     return response;
   })();
-  if (stored) {
+  if (stored && request.mode === 'navigate') {
     event.waitUntil(refresh.catch(() => {}));
     return stored;
+  }
+  // For JS, CSS and settings, prefer the current network response to avoid stale assets.
+  if (stored) {
+    try { return await refresh; } catch { return stored; }
   }
   try { return await refresh; }
   catch (error) {

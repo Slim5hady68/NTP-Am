@@ -572,9 +572,6 @@ document.addEventListener("visibilitychange", scheduleClock);
 
 // Keep the New Tab page in sync when the extension popup changes preferences.
 const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
-let currentWallpaperImage = null;
-let wallpaperDarkness = 35;
-window.applyNtpWallpaper = applyWallpaper;
 // Restore the proven v2.1 wallpaper rendering path, avoiding image-layer compositing.
 function applyWallpaper() {
   const layer = document.getElementById("wallpaper-layer");
