@@ -1,6 +1,6 @@
 # NTP-Am — AMOLED New Tab Page
 
-**Version 2.0.2**  
+**Version 2.0.3**  
 **Authored by JT26-AI**
 
 ## About NTP-Am
@@ -71,7 +71,7 @@ NTP-Am uses a service worker to cache its webpage files and supported favicons. 
 
 ## Credits
 
-**NTP-Am v2.0.2**  
+**NTP-Am v2.0.3**  
 **Authored by JT26-AI**
 
 *A minimalist AMOLED browsing experience designed for simplicity, speed and personalisation.*
@@ -80,3 +80,9 @@ NTP-Am uses a service worker to cache its webpage files and supported favicons. 
 ### Icon styles
 
 Open Settings and choose **Floating icons**, **Uniform rounded tiles**, or **Smoked Glass** under **Icon style**. The default remains Floating icons. Your choice is saved locally and included in backups.
+
+## Custom shortcut icons
+
+Edit a shortcut and choose **Website favicon**, **Upload image**, or **Image URL**. Uploaded PNG/JPG/WebP images are resized to 96 × 96 pixels and saved in your browser. Image URLs must be direct HTTPS image links and require network access unless the browser has cached them. Custom images are included in JSON backups.
+
+Smoked Glass has enhanced highlights, a polished rim, and deeper shadows.

@@ -77,7 +77,17 @@ function validateBackup(data) {
     if (!site || typeof site.name !== "string" || typeof site.url !== "string") throw new Error("The backup contains an invalid shortcut.");
     const url = new URL(site.url);
     if (!["http:", "https:"].includes(url.protocol) || !url.hostname.includes(".")) throw new Error("The backup contains an invalid website address.");
-    return { name: site.name.slice(0, 30), url: url.href };
+    const custom = {};
+    if (site.iconData !== undefined) {
+      if (typeof site.iconData !== "string" || site.iconData.length > 150000 || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(site.iconData)) throw new Error("Invalid uploaded icon in backup.");
+      custom.iconData = site.iconData;
+    } else if (site.iconUrl !== undefined) {
+      if (typeof site.iconUrl !== "string") throw new Error("Invalid icon URL in backup.");
+      const imageUrl = new URL(site.iconUrl);
+      if (imageUrl.protocol !== "https:") throw new Error("Icon URLs must use HTTPS.");
+      custom.iconUrl = imageUrl.href;
+    }
+    return { name: site.name.slice(0, 30), url: url.href, ...custom };
   });
   while (shortcuts.length < TOTAL_SLOTS) shortcuts.push(null);
   const raw = data.preferences || {};
@@ -85,7 +95,8 @@ function validateBackup(data) {
     showClock: typeof raw.showClock === "boolean" ? raw.showClock : true,
     gridColumns: [4,5,6].includes(Number(raw.gridColumns)) ? Number(raw.gridColumns) : 4,
     iconSize: ["small","medium","large"].includes(raw.iconSize) ? raw.iconSize : "medium",
-    showLabels: typeof raw.showLabels === "boolean" ? raw.showLabels : true
+    showLabels: typeof raw.showLabels === "boolean" ? raw.showLabels : true,
+    iconStyle: ["floating","tiles","glass"].includes(raw.iconStyle) ? raw.iconStyle : "floating"
   };
   return { shortcuts, preferences };
 }

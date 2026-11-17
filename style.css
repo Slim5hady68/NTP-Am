@@ -383,3 +383,17 @@ main {
   background:linear-gradient(to bottom,rgba(255,255,255,.47),rgba(255,255,255,0));
 }
 .shortcuts[data-icon-style="glass"] .slot:not(.empty) .icon img {position:relative;z-index:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));}
+
+/* v2.0.3: more dimensional smoked-glass spheres */
+.shortcuts[data-icon-style="glass"] .slot:not(.empty) .icon {
+  border-color:rgba(239,245,255,.64);
+  box-shadow:inset 1px 2px 3px rgba(255,255,255,.48),inset -4px -7px 10px rgba(0,0,0,.83),inset 0 0 0 2px rgba(255,255,255,.12),0 3px 7px rgba(0,0,0,.64),0 0 3px rgba(195,210,230,.20);
+}
+.shortcuts[data-icon-style="glass"] .slot:not(.empty) .icon::after {
+  background:linear-gradient(to bottom,rgba(255,255,255,.72),rgba(255,255,255,.12) 58%,transparent);
+}
+.modal select {width:100%;background:#171717;color:#eee;border:1px solid #393939;border-radius:8px;padding:11px;margin:5px 0 12px;}
+#icon-upload-wrap[hidden],#icon-url-wrap[hidden],#icon-preview[hidden] {display:none!important;}
+#icon-upload-wrap small {display:block;color:#aaa;margin:5px 0 12px;}
+.icon-preview-row {display:flex;align-items:center;gap:14px;color:#aaa;font-size:13px;margin:3px 0 12px;}
+.icon-preview-row img {height:48px;width:48px;object-fit:contain;border-radius:50%;background:#202020;}

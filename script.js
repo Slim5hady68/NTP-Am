@@ -12,6 +12,44 @@ const urlInput = document.getElementById("site-url");
 const title = document.getElementById("modal-title");
 const error = document.getElementById("form-error");
 const removeButton = document.getElementById("remove-shortcut");
+const iconSource = document.getElementById("icon-source");
+const iconUpload = document.getElementById("icon-upload");
+const iconUrlInput = document.getElementById("icon-url");
+const iconPreview = document.getElementById("icon-preview");
+let uploadedIcon = "";
+function validIconUrl(value) { try { const u = new URL(value); return u.protocol === "https:" && u.hostname ? u.href : ""; } catch { return ""; } }
+function iconChoice(site) {
+  if (site?.iconData && /^data:image\/(png|jpeg|webp);base64,/.test(site.iconData)) return {iconData:site.iconData};
+  if (site?.iconUrl && validIconUrl(site.iconUrl)) return {iconUrl:validIconUrl(site.iconUrl)};
+  return {};
+}
+function updateIconEditor() {
+  document.getElementById("icon-upload-wrap").hidden = iconSource.value !== "upload";
+  document.getElementById("icon-url-wrap").hidden = iconSource.value !== "url";
+  let preview = "";
+  if (iconSource.value === "upload") preview = uploadedIcon;
+  else if (iconSource.value === "url") preview = validIconUrl(iconUrlInput.value.trim());
+  else { try { preview = remoteFavicon(new URL(normaliseUrl(urlInput.value)).hostname); } catch {} }
+  iconPreview.hidden = !preview;
+  if (preview) iconPreview.src = preview;
+}
+iconSource.addEventListener("change", updateIconEditor);
+iconUrlInput.addEventListener("input", updateIconEditor);
+urlInput.addEventListener("input", () => { if(iconSource.value === "favicon") updateIconEditor(); });
+iconUpload.addEventListener("change", async () => {
+  const file = iconUpload.files?.[0]; if (!file) return;
+  if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 5*1024*1024) { error.textContent = "Choose a PNG, JPG or WebP smaller than 5 MB."; return; }
+  try {
+    const bitmap = await createImageBitmap(file);
+    const canvas = document.createElement('canvas'); canvas.width=96; canvas.height=96;
+    const ctx = canvas.getContext('2d');
+    const ratio = Math.min(96/bitmap.width,96/bitmap.height);
+    ctx.drawImage(bitmap,(96-bitmap.width*ratio)/2,(96-bitmap.height*ratio)/2,bitmap.width*ratio,bitmap.height*ratio);
+    bitmap.close?.();
+    uploadedIcon = canvas.toDataURL('image/png');
+    error.textContent = ""; updateIconEditor();
+  } catch { error.textContent = "This image could not be processed."; }
+});
 
 let sites = Array(TOTAL_SLOTS).fill(null);
 let editingIndex = null;
@@ -40,7 +78,7 @@ function loadSites() {
           const url = new URL(site.url);
           if (!["https:", "http:"].includes(url.protocol)) return null;
 
-          return { name: site.name, url: url.href };
+          return { name: site.name, url: url.href, ...iconChoice(site) };
         } catch {
           return null;
         }
@@ -83,6 +121,11 @@ function openModal(index = null) {
   urlInput.value = site ? site.url : "";
 
   removeButton.hidden = !site;
+  uploadedIcon = site?.iconData || "";
+  iconUpload.value = "";
+  iconUrlInput.value = site?.iconUrl || "";
+  iconSource.value = site?.iconData ? "upload" : site?.iconUrl ? "url" : "favicon";
+  updateIconEditor();
   modal.hidden = false;
 
   setTimeout(() => nameInput.focus(), 50);
@@ -140,7 +183,16 @@ form.addEventListener("submit", event => {
     return;
   }
 
-  sites[index] = { name, url };
+  let custom = {};
+  if (iconSource.value === "upload") {
+    if (!uploadedIcon) { error.textContent = "Choose an image or switch to Website favicon."; return; }
+    custom = {iconData:uploadedIcon};
+  } else if (iconSource.value === "url") {
+    const imageUrl = validIconUrl(iconUrlInput.value.trim());
+    if (!imageUrl) { error.textContent = "Enter a direct HTTPS image URL."; return; }
+    custom = {iconUrl:imageUrl};
+  }
+  sites[index] = { name, url, ...custom };
   saveSites();
   render();
   closeModal();
@@ -190,9 +242,8 @@ function makeIcon(site) {
   icon.appendChild(img);
   // The service worker caches favicon responses where supported. Ignore completion
   // if the shortcut was replaced or removed in the meantime.
-  getIconUrl(host).then(url => {
-    if (img.parentNode === icon) img.src = url;
-  });
+  if (site.iconData || site.iconUrl) img.src = site.iconData || site.iconUrl;
+  else getIconUrl(host).then(url => { if (img.parentNode === icon) img.src = url; });
   return icon;
 }
 
@@ -204,7 +255,7 @@ function render() {
     const oldUrl = oldSlot.dataset.siteUrl;
     const oldIcon = oldSlot.querySelector(".icon");
     if (oldUrl && oldIcon && !previousIcons.has(oldUrl)) {
-      previousIcons.set(oldUrl, oldIcon);
+      previousIcons.set(oldUrl + "|" + (oldSlot.dataset.iconKey || ""), oldIcon);
     }
   }
   const fragment = document.createDocumentFragment();
@@ -231,7 +282,8 @@ function render() {
       slot.addEventListener("click", () => openModal(i));
     } else {
       slot.dataset.siteUrl = site.url;
-      const cachedIcon = previousIcons.get(site.url);
+      slot.dataset.iconKey = site.iconData || site.iconUrl || "";
+      const cachedIcon = previousIcons.get(site.url + "|" + (site.iconData || site.iconUrl || ""));
       slot.append(cachedIcon || makeIcon(site));
       previousIcons.delete(site.url);
 
