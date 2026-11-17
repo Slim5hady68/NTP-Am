@@ -39,11 +39,15 @@ fileInput.addEventListener('change',async()=>{
  }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to process this wallpaper.');console.error('NTPure wallpaper upload:',e);}
 });
 window.addEventListener('message',event=>{
- if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='ntpure-wallpaper-applied')return;
- status.textContent=event.data.visible?'Wallpaper applied. Close settings to view it.':'Saved, but the main page has not displayed it. Try refreshing NTPure.';
+ if(event.origin!==location.origin||event.source!==window.parent)return;
+ if(event.data?.type==='ntpure-wallpaper-diagnostic') {status.textContent='Display check: '+event.data.detail;return;}
+ if(event.data?.type!=='ntpure-wallpaper-applied')return;
+ status.textContent=event.data.visible?'Wallpaper detected. Checking image…':'Wallpaper not detected on main page.';
+ window.parent.postMessage({type:'ntpure-wallpaper-check'},location.origin);
 });
 remove.addEventListener('click' ,()=>{state.image='';persist();update();});
 slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';window.parent.postMessage({type:'ntpure-wallpaper-dim',value:state.darkness},location.origin);});
 slider.addEventListener('change',()=>{state.darkness=Number(slider.value);persist();});
 update();
+setTimeout(()=>window.parent.postMessage({type:'ntpure-wallpaper-check'},location.origin),500);
 })();

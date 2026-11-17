@@ -590,9 +590,13 @@ function applyWallpaper() {
     const imageElement = document.getElementById("wallpaper-image");
     if (imageElement) {
       if (image) {
+        imageElement.onload = () => { window.ntpureWallpaperImageStatus = 'Loaded '+imageElement.naturalWidth+'×'+imageElement.naturalHeight; };
+        imageElement.onerror = () => { window.ntpureWallpaperImageStatus = 'Image decode failed'; };
+        window.ntpureWallpaperImageStatus = 'Loading image';
         imageElement.src = image;
         imageElement.hidden = false;
       } else {
+        window.ntpureWallpaperImageStatus = 'No wallpaper selected';
         imageElement.removeAttribute("src");
         imageElement.hidden = true;
       }
