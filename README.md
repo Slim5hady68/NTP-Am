@@ -1,88 +1,102 @@
-# NTP-Am — AMOLED New Tab Page
+# NTP-Am — Minimalist AMOLED New Tab Page
 
-**Version 2.0.3**  
-**Authored by JT26-AI**
+**Version 2.0.3** · **Authored by JT26-AI**
 
-## About NTP-Am
+NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
-NTP-Am is a lightweight, minimalist New Tab Page for a clean, distraction-free browsing experience. It combines a true AMOLED black background with customisable website shortcuts, without a search bar or unnecessary clutter.
+**Try NTP-Am:** https://slim5hady68.github.io/NTP-Am/
 
-Originally developed as a browser extension, NTP-Am is also available as a standalone webpage hosted on GitHub Pages. This version is especially useful with Android browsers that support a custom New Tab URL.
+## Screenshots
+
+<p align="center">
+  <a href="images/smoked-glass.png"><img src="images/smoked-glass.png" alt="NTP-Am Smoked Glass shortcuts" width="30%"></a>
+  <a href="images/settings.png"><img src="images/settings.png" alt="NTP-Am appearance settings" width="30%"></a>
+  <a href="images/shortcut-editor.png"><img src="images/shortcut-editor.png" alt="NTP-Am shortcut editor" width="30%"></a>
+</p>
+<p align="center"><sub>Smoked Glass icons · Appearance settings · Shortcut editor (tap an image for full size)</sub></p>
 
 ## Features
 
-- **AMOLED black design:** Pure black background with borderless shortcut icons.
-- **Custom shortcuts:** Add, edit, remove and drag shortcuts into a preferred order.
-- **Adjustable grid:** Choose 4, 5 or 6 columns.
-- **Icon sizes:** Small, medium or large.
-- **Optional labels:** Show or hide website names.
-- **Optional clock and date:** Show or hide the clock/date display.
-- **Discreet settings:** A visible 12px grey cog in the bottom-right corner opens a slide-up settings panel.
-- **Local preferences:** Shortcuts and settings are stored in your browser.
-- **Backup and restore:** Export or import a JSON backup.
-- **Caching:** A service worker caches site files and supported favicons for faster repeat visits where supported.
+- **Three icon styles:** Floating (borderless), Uniform Rounded Tiles, and Smoked Glass with glossy reflections and dimensional shading.
+- **Customisable shortcut icons:** Personalise each shortcut icon individually using its website favicon, your own PNG/JPG/WebP image, or a direct HTTPS image URL.
+- **Flexible shortcut grid:** Choose 4, 5 or 6 columns, small/medium/large icons, and optional website labels.
+- **Drag-and-drop ordering:** Press and hold a shortcut to rearrange it.
+- **Optional clock and date:** Show or hide them in Settings.
+- **Discreet settings panel:** A 12px grey cog opens a slide-up panel; close it using × or by tapping outside.
+- **Backup and restore:** Export shortcuts, icon choices, uploaded icon images, and preferences to a JSON file.
+- **Local storage and caching:** Your setup stays in your browser, while service-worker caching can improve repeat load times.
 
 ## Getting Started
 
-Open **https://slim5hady68.github.io/NTP-Am/** in your browser.
+Open **https://slim5hady68.github.io/NTP-Am/**.
 
-### Use as your New Tab Page in BareBrowser (Android)
+### Use with BareBrowser on Android
 
 1. Install or enable the **Custom New Tab URL** extension.
-2. Open its settings and enter `https://slim5hady68.github.io/NTP-Am/`.
-3. Save the URL, then open a new tab to try NTP-Am.
-4. If you previously installed the original NTP-Am extension that overrides the New Tab Page, disable it to avoid conflicts with BareBrowser's **+** button.
+2. Set its URL to `https://slim5hady68.github.io/NTP-Am/`.
+3. Save and open a new tab.
 
-Other browsers may use a different method to set a custom New Tab Page.
+Other browsers may offer different ways to configure a custom New Tab Page.
 
-## How to Use NTP-Am
+## How to Use
 
-### Add a shortcut
+### Add, edit, or remove shortcuts
 
-1. Tap an empty **+** shortcut position.
-2. Enter a name and website URL.
-3. Tap **Save**.
+- **Add:** Tap an empty **+** position, enter a website name and URL, then save.
+- **Edit:** Double-tap an existing shortcut to open its editor.
+- **Remove:** Open the shortcut editor and choose **Remove**.
+- **Rearrange:** Press and hold a shortcut, move it to another position, then release.
 
-### Edit or remove a shortcut
+### Choose a custom icon
 
-Double-tap an existing shortcut to open the editor. Change its details and save, or select **Remove**.
+In the shortcut editor, select an icon source:
 
-### Rearrange shortcuts
+1. **Website favicon** — use the website's automatically retrieved icon.
+2. **Upload image** — choose a PNG, JPG, or WebP file from your device. NTP-Am resizes uploaded icons to 96 × 96 pixels and stores them locally.
+3. **Image URL** — paste a direct HTTPS link to an image.
 
-Press and hold a shortcut, drag it to a new position, and release. On touchscreens, a short hold activates dragging.
+You can switch back to the website favicon at any time. Image URLs depend on the remote image remaining available; uploaded images are stored locally.
 
-### Change settings
+### Change the appearance
 
-Tap the small grey cog in the bottom-right corner to open the slide-up settings panel. Choose the grid columns, icon size, shortcut label visibility and clock/date visibility. Close the panel with **×** or by tapping outside it.
+Tap the small grey cog in the bottom-right corner. Under **Icon style**, choose:
 
-### Back up or restore
+| Style | Appearance |
+| --- | --- |
+| **Floating** | Clean, borderless icons on pure black |
+| **Uniform Rounded Tiles** | Consistent rounded-square icon backgrounds |
+| **Smoked Glass** | Glossy, smoky circular icons with highlights and depth |
 
-Open Settings and select **Export backup** to save a JSON backup of your setup. To import one, select **Restore backup** and choose a previously exported JSON file.
+You can also change the number of grid columns, icon size, label visibility, and clock/date display. Your choices are saved automatically.
+
+### Back up and restore
+
+Open Settings and choose **Export backup** to download a JSON file. Use **Restore backup** to import a saved configuration.
+
+Backups include your shortcut order, preferences, custom icon URLs, and uploaded icon image data. **Restoring a backup replaces the current configuration**, so export your existing setup first if you want to keep it.
 
 ## Privacy and Storage
 
-NTP-Am saves your shortcuts and preferences locally using your browser's `localStorage`; it does not upload your shortcut configuration to GitHub. Website icons are requested from Google's favicon service and may be cached by the browser.
+NTP-Am stores shortcuts, uploaded icons, and preferences locally in your browser using `localStorage`. Your personal shortcut configuration is not uploaded to GitHub.
 
-Clearing browser site data, or using a private browsing session, may remove your saved setup. Export a backup before clearing browser data or changing browsers. Data from the original extension does not transfer automatically; use its backup/restore feature where available.
+Website favicons may be fetched from Google's favicon service. If you choose an external image URL, your browser requests that image from its host.
 
-## Performance
+Clearing browser site data can remove your saved shortcuts and settings. Keep a JSON backup, especially before changing browsers or clearing data.
 
-NTP-Am uses a service worker to cache its webpage files and supported favicons. This can improve repeat loading times and may allow the page to load offline after a successful online visit. Behaviour depends on browser support and cached resources.
+## Performance and Offline Use
+
+A service worker caches page resources and supported favicons to improve repeat visits. The page may load offline after an initial successful visit, depending on browser support and which resources have been cached. Remote custom image URLs may still require a connection.
+
+## What's New in v2.0.3
+
+- Enhanced **Smoked Glass** icons with stronger highlights, a polished rim, and deeper shadows.
+- Added custom shortcut icons via **image upload** or **direct HTTPS image URL**.
+- Included uploaded custom icons and icon preferences in JSON backups.
 
 ## Credits
 
 **NTP-Am v2.0.3**  
-**Authored by JT26-AI**
+**Authored by JT26-AI**  
+**Icon concept credit: DrumDestroyer**
 
-*A minimalist AMOLED browsing experience designed for simplicity, speed and personalisation.*
-
-
-### Icon styles
-
-Open Settings and choose **Floating icons**, **Uniform rounded tiles**, or **Smoked Glass** under **Icon style**. The default remains Floating icons. Your choice is saved locally and included in backups.
-
-## Custom shortcut icons
-
-Edit a shortcut and choose **Website favicon**, **Upload image**, or **Image URL**. Uploaded PNG/JPG/WebP images are resized to 96 × 96 pixels and saved in your browser. Image URLs must be direct HTTPS image links and require network access unless the browser has cached them. Custom images are included in JSON backups.
-
-Smoked Glass has enhanced highlights, a polished rim, and deeper shadows.
+*Minimalist by design. Personalised by you.*
