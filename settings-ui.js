@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     select.classList.add('enhanced-native');select.parentNode.insertBefore(wrap,select.nextSibling);wrap.append(trigger,menu);
     select.addEventListener('change',sync);sync();
   }
-  const report=()=>window.parent.postMessage({type:'ntpam-settings-height',height:Math.ceil(document.body.scrollHeight)},location.origin);
+  const report=()=>{const footer=document.querySelector('footer');const height=footer ? Math.ceil(footer.getBoundingClientRect().bottom - document.body.getBoundingClientRect().top + 6) : Math.ceil(document.body.scrollHeight);window.parent.postMessage({type:'ntpam-settings-height',height},location.origin);};
   if('ResizeObserver' in window)new ResizeObserver(report).observe(document.body);
   window.addEventListener('load',report);report();
 });

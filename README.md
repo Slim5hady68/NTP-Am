@@ -1,6 +1,6 @@
 # NTP-Am — Minimalist AMOLED New Tab Page
 
-**Version 2.0.3** · **Authored by JT26-AI**
+**Version 2.1** · **Authored by JT26-AI**
 
 NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -94,7 +94,7 @@ Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, J
 
 Uploaded wallpapers are stored in your browser and included in exported JSON backups. Keep a backup before clearing browser data.
 
-## What's New in v2.0.3
+## What's New in v2.1
 
 - Upload a custom wallpaper and adjust its darkness using a live slider.
 - Keep pure AMOLED black as the default.
@@ -103,7 +103,7 @@ Uploaded wallpapers are stored in your browser and included in exported JSON bac
 
 ## Credits
 
-**NTP-Am v2.0.3**  
+**NTP-Am v2.1**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 

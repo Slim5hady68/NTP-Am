@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="application-version" content="2.0.3">
+  <meta name="application-version" content="2.1">
   <title>NTP-Am settings</title>
   <link rel="stylesheet" href="popup.css">
   <style>
@@ -60,7 +60,7 @@
   #wallpaper-darkness {width:100%;accent-color:#64dfff;margin:4px 0 0;}
   #wallpaper-status {min-height:0;margin:3px 0;color:#8de5ad;font-size:11px;}
 
-  /* v2.0.3 testing refinement: consistent headings and tighter controls. */
+  /* v2.1 testing refinement: consistent headings and tighter controls. */
   body.panel-mode {padding:3px 15px 6px !important;}
   body.panel-mode h2, body.panel-mode .setting-row strong {font-size:14px !important;line-height:1.25;font-weight:600;}
   body.panel-mode .setting-row {padding:7px 0 !important;}
@@ -86,7 +86,7 @@
   body.panel-mode .backup button {min-height:33px !important;padding:5px;font-size:11px;}
   body.panel-mode footer {padding:6px 0 3px;}
 
-  /* v2.0.3 compact-panel follow-up: shorten controls and vertical rhythm. */
+  /* v2.1 compact-panel follow-up: shorten controls and vertical rhythm. */
   body.panel-mode {padding:0 15px 3px !important;}
   body.panel-mode .setting-row {padding:4px 0 !important;gap:8px;}
   body.panel-mode h2,body.panel-mode .setting-row strong {font-size:13px !important;line-height:1.2;}
@@ -142,10 +142,13 @@
   body.panel-mode .setting-row {padding:5px 0 !important;}
   body.panel-mode #wallpaper-controls {padding-top:1px;}
   body.panel-mode #wallpaper-darkness {height:18px;}
+  /* v2.1: remove unneeded blank space when status messages are empty. */
+  body.panel-mode #status:empty, body.panel-mode #wallpaper-status:empty {display:none !important;}
+  body.panel-mode footer {padding-bottom:2px !important;}
   </style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js?v=203read5" defer></script>
-  <script src="settings-ui.js?v=203read5" defer></script>
-  <script src="wallpaper.js?v=203read5" defer></script>
+  <script src="popup.js?v=21rc1" defer></script>
+  <script src="settings-ui.js?v=21rc1" defer></script>
+  <script src="wallpaper.js?v=21rc1" defer></script>
 </head>
 <body>
   
