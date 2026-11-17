@@ -112,10 +112,21 @@
   body.panel-mode .backup button {min-height:29px !important;padding:3px !important;font-size:10px !important;margin-top:3px !important;}
   body.panel-mode #status {margin:2px 0 !important;font-size:10px !important;}
   body.panel-mode footer {padding:4px 0 2px !important;font-size:10px !important;}
+  /* Slightly larger text without enlarging controls or changing spacing. */
+  body.panel-mode {font-size:14px !important;}
+  body.panel-mode h2, body.panel-mode .setting-row strong {font-size:14px !important;}
+  body.panel-mode small {font-size:11px !important;}
+  body.panel-mode .grid-choice-label, body.panel-mode .display-options > label {font-size:12px !important;}
+  body.panel-mode .grid-choice-button {font-size:11px !important;}
+  body.panel-mode .custom-select > button {font-size:12px !important;}
+  body.panel-mode .custom-select-menu button {font-size:13px !important;}
+  body.panel-mode .wallpaper-actions button, body.panel-mode .shortcut-management button, body.panel-mode .backup button {font-size:11px !important;}
+  body.panel-mode #status, body.panel-mode footer {font-size:11px !important;}
+  body.panel-mode .wallpaper-dim-label {font-size:13px !important;}
   </style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js?v=203tight3" defer></script>
-  <script src="settings-ui.js?v=203tight3" defer></script>
-  <script src="wallpaper.js?v=203tight3" defer></script>
+  <script src="popup.js?v=203font4" defer></script>
+  <script src="settings-ui.js?v=203font4" defer></script>
+  <script src="wallpaper.js?v=203font4" defer></script>
 </head>
 <body>
   
@@ -136,7 +147,7 @@
       <button type="button" class="grid-choice-button" data-columns="6" aria-pressed="false">6 columns</button>
     </div>
     <label for="icon-style">Icon style</label>
-    <select id="icon-style"><option value="floating">Floating icons (AMOLED)</option><option value="tiles">Uniform rounded tiles</option><option value="glass">Smoked Glass</option></select>
+    <select id="icon-style"><option value="floating">Floating icons</option><option value="tiles">Uniform rounded tiles</option><option value="glass">Smoked Glass</option></select>
     <label for="icon-size">Icon size</label>
     <select id="icon-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
     <div class="setting-row labels-row"><div><strong>Show shortcut labels</strong><small>Display names beneath icons</small></div><label class="switch"><input id="show-labels" type="checkbox"><span></span></label></div>
