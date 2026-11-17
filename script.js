@@ -438,7 +438,7 @@ function loadPreferences() {
   preferences.gridColumns = [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4;
   preferences.iconSize = ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium";
   preferences.showLabels = typeof saved.showLabels === "boolean" ? saved.showLabels : true;
-  preferences.iconStyle = ["floating","tiles","subtle"].includes(saved.iconStyle) ? saved.iconStyle : "floating";
+  preferences.iconStyle = ["floating","tiles","glass"].includes(saved.iconStyle) ? saved.iconStyle : "floating";
   applyClockVisibility();
   scheduleClock();
   applyShortcutAppearance();

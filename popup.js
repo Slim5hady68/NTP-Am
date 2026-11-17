@@ -15,7 +15,7 @@ function readPreferences() {
     gridColumns: [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4,
     iconSize: ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium",
     showLabels: typeof saved.showLabels === "boolean" ? saved.showLabels : true,
-    iconStyle: ["floating","tiles","subtle"].includes(saved.iconStyle) ? saved.iconStyle : "floating"
+    iconStyle: ["floating","tiles","glass"].includes(saved.iconStyle) ? saved.iconStyle : "floating"
   };
 }
 function savePreference(key, value) {
