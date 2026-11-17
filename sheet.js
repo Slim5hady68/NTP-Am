@@ -28,8 +28,8 @@
     if (event.data?.type === 'ntpam-edit-shortcuts') setOpen(false);
     if (event.data?.type === 'ntpam-wallpaper-updated') window.applyNtpWallpaper?.();
     if (event.data?.type === 'ntpam-settings-height' && Number.isFinite(event.data.height)) {
-      const desired=Math.max(240,Math.ceil(event.data.height)+38);
-      panel.style.height=Math.min(desired,window.innerHeight-16)+'px';
+      const desired=Math.max(240,Math.ceil(event.data.height)+36);
+      panel.style.height=Math.min(desired,window.innerHeight-2)+'px';
     }
   });
   trigger.addEventListener('click',() => setOpen(true));

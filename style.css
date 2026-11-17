@@ -427,3 +427,12 @@ main {
 /* v2.0.3 wallpaper is behind all controls, shortcuts and dialogs. */
 #wallpaper-layer {position:fixed;inset:0;z-index:0;pointer-events:none;background-position:center;background-size:cover;background-repeat:no-repeat;}
 main {position:relative;z-index:1;}
+
+/* Allow the sheet to expand slightly more while retaining a scrollable iframe on short screens. */
+.settings-sheet {max-height:calc(100dvh - 8px) !important;}
+.settings-sheet iframe {overflow-y:auto;}
+
+/* v2.0.3: maximise available settings space while keeping native page scrolling. */
+.settings-sheet {max-height:calc(100dvh - 2px) !important;}
+.settings-sheet iframe {margin-top:32px !important;height:calc(100% - 32px) !important;}
+.sheet-close {top:0 !important;}
