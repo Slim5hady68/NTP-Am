@@ -26,7 +26,11 @@
   window.addEventListener('message', event => {
     if (event.origin !== location.origin || event.source !== document.getElementById('settings-frame').contentWindow) return;
     if (event.data?.type === 'ntpam-edit-shortcuts') setOpen(false);
-    if (event.data?.type === 'ntpam-wallpaper-updated') window.applyNtpWallpaper?.();
+    if (event.data?.type === 'ntpam-wallpaper-updated') {
+      window.applyNtpWallpaper?.();
+      // Confirm that the main page has picked up the saved image.
+      event.source?.postMessage({type:'ntpure-wallpaper-applied',visible:!!document.getElementById('wallpaper-layer')?.classList.contains('has-wallpaper')},event.origin);
+    }
     if (event.data?.type === 'ntpure-wallpaper-dim') window.applyNtpWallpaperDarkness?.(event.data.value);
     if (event.data?.type === 'ntpam-settings-height' && Number.isFinite(event.data.height)) {
       const desired=Math.max(240,Math.ceil(event.data.height)+36);

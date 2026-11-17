@@ -35,10 +35,14 @@ fileInput.addEventListener('change',async()=>{
   let data=canvas.toDataURL('image/jpeg',.72);
   if(data.length>1100000){const s=Math.min(1,700/Math.max(canvas.width,canvas.height));const small=document.createElement('canvas');small.width=Math.round(canvas.width*s);small.height=Math.round(canvas.height*s);small.getContext('2d').drawImage(canvas,0,0,small.width,small.height);data=small.toDataURL('image/jpeg',.60);}
   if(data.length>1100000)throw Error('Image too large after optimisation.');
-  const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();status.textContent='Wallpaper saved. Close settings to view it.';
+  const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();status.textContent='Wallpaper saved. Applying background…';
  }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to process this wallpaper.');console.error('NTPure wallpaper upload:',e);}
 });
-remove.addEventListener('click',()=>{state.image='';persist();update();});
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='ntpure-wallpaper-applied')return;
+ status.textContent=event.data.visible?'Wallpaper applied. Close settings to view it.':'Saved, but the main page has not displayed it. Try refreshing NTPure.';
+});
+remove.addEventListener('click' ,()=>{state.image='';persist();update();});
 slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';window.parent.postMessage({type:'ntpure-wallpaper-dim',value:state.darkness},location.origin);});
 slider.addEventListener('change',()=>{state.darkness=Number(slider.value);persist();});
 update();

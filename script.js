@@ -587,9 +587,19 @@ function applyWallpaper() {
   try { wallpaper = JSON.parse(localStorage.getItem(WALLPAPER_KEY)) || {}; } catch {}
   const image = typeof wallpaper.image === "string" && /^data:image\/(jpeg|png|webp);base64,/.test(wallpaper.image) ? wallpaper.image : "";
   if (image !== currentWallpaperImage) {
-    layer.style.backgroundImage = image ? `url("${image}")` : "none";
+    const imageElement = document.getElementById("wallpaper-image");
+    if (imageElement) {
+      if (image) {
+        imageElement.src = image;
+        imageElement.hidden = false;
+      } else {
+        imageElement.removeAttribute("src");
+        imageElement.hidden = true;
+      }
+    }
     currentWallpaperImage = image;
   }
+  layer.classList.toggle("has-wallpaper", Boolean(image));
   window.applyNtpWallpaperDarkness(wallpaper.darkness ?? 35);
 }
 window.addEventListener("storage", event => {
