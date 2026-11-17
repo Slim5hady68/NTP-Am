@@ -35,3 +35,6 @@ Tap the small corner cog to open settings in a slide-up sheet. Close using ×, t
 
 
 v2.1.4: Replaces corner cog with bottom-centre handle; settings opens in a shorter slide-up sheet with a dimmed backdrop. Swipe down on sheet handle, tap backdrop or × to close.
+
+
+v2.1.5: Settings trigger is a tiny bottom-right dot; sheet height increased and content remains scrollable on phones. Refresh after deployment to activate the updated service worker.

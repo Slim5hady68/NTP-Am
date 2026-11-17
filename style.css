@@ -330,3 +330,14 @@ main {
 .sheet-close {top:2px;right:12px;width:34px;height:34px;font-size:22px;}
 .sheet-handle-zone {height:34px;padding-top:13px;}
 @media(max-height:650px){.settings-sheet{height:72vh;}}
+
+/* v2.1.5: small, discreet dot in the former cog position */
+.settings-handle-trigger { position:fixed !important; top:auto !important; left:auto !important; right:9px !important; bottom:7px !important; transform:none !important; width:42px !important; height:42px !important; border:0 !important; border-radius:50%; z-index:35 !important; background:transparent !important; }
+.handle-dot { display:block; width:6px; height:6px; border-radius:50%; background:#777; }
+.settings-handle-trigger:active .handle-dot {background:#bbb;}
+/* Panel content scrolls within the available height, including on smaller phones */
+.settings-sheet {position:fixed !important; top:auto !important; left:0 !important; right:0 !important; bottom:0 !important; width:100% !important; height:min(78dvh,650px) !important; max-height:calc(100dvh - 32px) !important; box-sizing:border-box; transform:translate3d(0,110%,0); }
+.settings-sheet.is-open {transform:translate3d(0,0,0);}
+.settings-sheet iframe {display:block; width:100%; height:calc(100% - 38px); margin-top:38px; overflow:auto; }
+.sheet-handle-zone {height:38px;}
+@media(max-height:650px){.settings-sheet{height:min(88dvh,650px) !important;}}

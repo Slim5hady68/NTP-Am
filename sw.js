@@ -1,6 +1,6 @@
 /* NTP-Am Web v2.1.2: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpam-2.1.4';
+const VERSION = 'ntpam-2.1.5';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js'];
