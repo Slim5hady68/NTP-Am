@@ -1,6 +1,6 @@
 /* NTPure Web v2.0: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpure-2.2-wallpaper-diag6';
+const VERSION = 'ntpure-2.2-layer-speed7';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js', './settings-ui.js', './wallpaper.js'];
@@ -43,20 +43,22 @@ async function cacheIcon(request) {
     throw error;
   }
 }
-// Network-first for app files, cached fallback when offline.
-async function shellResponse(request) {
+// Fast cache-first rendering with a background refresh for next navigation.
+// Unlike the old cache-first logic, refresh cached assets in the background.
+async function shellResponse(request, event) {
   const cache = await caches.open(SHELL_CACHE);
-  try {
+  const stored = await cache.match(request, { ignoreSearch: true });
+  const refresh = (async () => {
     const response = await fetch(request, { cache: 'no-store' });
-    if (response.ok) {
-      await cache.put(request, response.clone()).catch(() => {});
-      return response;
-    }
-    const stored = await cache.match(request, { ignoreSearch: true });
-    return stored || response;
-  } catch (error) {
-    const stored = await cache.match(request, { ignoreSearch: true });
-    if (stored) return stored;
+    if (response.ok) await cache.put(request, response.clone()).catch(() => {});
+    return response;
+  })();
+  if (stored) {
+    event.waitUntil(refresh.catch(() => {}));
+    return stored;
+  }
+  try { return await refresh; }
+  catch (error) {
     if (request.mode === 'navigate') {
       const fallback = await cache.match('./index.html');
       if (fallback) return fallback;
@@ -76,6 +78,6 @@ self.addEventListener('fetch', event => {
   const scope = new URL(self.registration.scope);
   if (!url.pathname.startsWith(scope.pathname)) return;
   if (request.mode === 'navigate' || APP_FILES.some(file => new URL(file, scope).pathname === url.pathname)) {
-    event.respondWith(shellResponse(request));
+    event.respondWith(shellResponse(request, event));
   }
 });
