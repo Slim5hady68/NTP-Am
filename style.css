@@ -409,3 +409,7 @@ main {
 .shortcut-edit-mode .slot:not(.empty) { cursor:pointer; }
 
 .shortcut-edit-mode .slot { touch-action:manipulation; }
+
+/* v2.0.2: taller settings sheet to show more options without extra scrolling. */
+.settings-sheet { height: min(94dvh, 980px) !important; max-height: calc(100dvh - 10px) !important; }
+@media (max-height: 650px) { .settings-sheet {height: calc(100dvh - 8px) !important;} }
