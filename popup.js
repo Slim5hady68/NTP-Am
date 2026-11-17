@@ -1,6 +1,7 @@
 "use strict";
 const STORAGE_KEY = "amoled-ntp-shortcuts-v2";
 const SETTINGS_KEY = "ntp-am-settings-v1";
+const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
 const TOTAL_SLOTS = 12;
 const DEFAULT_PREFS = {showClock:true, gridColumns:4, iconSize:"medium", showLabels:true, iconStyle:"floating"};
 const showClock = document.getElementById("show-clock");
@@ -58,7 +59,7 @@ function readSites() {
   return Array(TOTAL_SLOTS).fill(null);
 }
 function exportBackup() {
-  const backup = { app: "NTP-Am", backupVersion: 1, exportedAt: new Date().toISOString(), shortcuts: readSites(), preferences: readPreferences() };
+  const backup = { app: "NTP-Am", backupVersion: 1, exportedAt: new Date().toISOString(), shortcuts: readSites(), preferences: readPreferences(), wallpaper: JSON.parse(localStorage.getItem(WALLPAPER_KEY) || "null") };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -98,7 +99,13 @@ function validateBackup(data) {
     showLabels: typeof raw.showLabels === "boolean" ? raw.showLabels : true,
     iconStyle: ["floating","tiles","glass"].includes(raw.iconStyle) ? raw.iconStyle : "floating"
   };
-  return { shortcuts, preferences };
+  let wallpaper=null;
+  if (data.wallpaper != null) {
+    const w=data.wallpaper;
+    if (typeof w !== 'object' || typeof w.image !== 'string' || w.image.length>1100000 || !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(w.image) || !Number.isFinite(Number(w.darkness)) || Number(w.darkness)<0 || Number(w.darkness)>90) throw new Error('Invalid wallpaper in backup.');
+    wallpaper={image:w.image,darkness:Number(w.darkness)};
+  }
+  return { shortcuts, preferences, wallpaper };
 }
 backupInput.addEventListener("change", async () => {
   const file = backupInput.files && backupInput.files[0];
@@ -106,9 +113,10 @@ backupInput.addEventListener("change", async () => {
   try {
     const data = JSON.parse(await file.text());
     const restored = validateBackup(data);
-    if (!window.confirm("Restore this NTP-Am backup? Your current shortcuts and clock preference will be replaced.")) { setStatus("Restore cancelled."); return; }
+    if (!window.confirm("Restore this NTP-Am backup? Your current shortcuts, preferences and wallpaper will be replaced.")) { setStatus("Restore cancelled."); return; }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(restored.shortcuts));
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(restored.preferences));
+    if(restored.wallpaper)localStorage.setItem(WALLPAPER_KEY,JSON.stringify(restored.wallpaper));else localStorage.removeItem(WALLPAPER_KEY);
     showClock.checked = restored.preferences.showClock;
     updateColumnButtons(restored.preferences.gridColumns);
     iconSizeSelect.value = restored.preferences.iconSize;

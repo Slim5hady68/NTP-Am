@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="application-version" content="2.0.2">
+  <meta name="application-version" content="2.0.3">
   <title>NTP-Am</title>
-  <link rel="stylesheet" href="style.css?v=202ui">
-  <script src="script.js?v=202ui" defer></script>
+  <link rel="stylesheet" href="style.css?v=203wall">
+  <script src="script.js?v=203wall" defer></script>
 </head>
 <body>
+  <div id="wallpaper-layer" aria-hidden="true"></div>
   <main>
     <section class="clock-panel" id="clock-panel" aria-live="off">
       <div class="clock-time" id="clock-time"></div>
@@ -25,9 +26,9 @@
   <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
   <section class="settings-sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-label="NTP-Am settings" aria-hidden="true" inert>
     <button class="sheet-close" id="close-settings" aria-label="Close settings">×</button>
-    <iframe id="settings-frame" title="NTP-Am settings" src="settings.html?panel=1&v=202ui"></iframe>
+    <iframe id="settings-frame" title="NTP-Am settings" src="settings.html?panel=1&v=203wall"></iframe>
   </section>
-  <script src="sheet.js?v=202ui" defer></script>
+  <script src="sheet.js?v=203wall" defer></script>
   <div class="modal-overlay" id="modal" hidden>
     <section class="modal" role="dialog"
       aria-modal="true" aria-labelledby="modal-title">
@@ -51,16 +52,12 @@
         <select id="icon-source">
           <option value="favicon">Website favicon</option>
           <option value="upload">Upload image</option>
-          <option value="url">Image URL</option>
+
         </select>
         <div id="icon-upload-wrap" hidden>
           <label for="icon-upload">Choose an image (PNG, JPG or WebP)</label>
           <input id="icon-upload" type="file" accept="image/png,image/jpeg,image/webp">
           <small>Images are resized locally to 96 × 96 pixels for storage and backups.</small>
-        </div>
-        <div id="icon-url-wrap" hidden>
-          <label for="icon-url">Direct image URL (HTTPS)</label>
-          <input id="icon-url" type="url" inputmode="url" placeholder="https://example.com/icon.png">
         </div>
         <div class="icon-preview-row"><span>Preview</span><img id="icon-preview" alt="Icon preview"></div>
         <p class="form-error" id="form-error"></p>

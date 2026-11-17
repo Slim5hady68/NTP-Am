@@ -14,7 +14,7 @@ const error = document.getElementById("form-error");
 const removeButton = document.getElementById("remove-shortcut");
 const iconSource = document.getElementById("icon-source");
 const iconUpload = document.getElementById("icon-upload");
-const iconUrlInput = document.getElementById("icon-url");
+
 const iconPreview = document.getElementById("icon-preview");
 let uploadedIcon = "";
 function validIconUrl(value) { try { const u = new URL(value); return u.protocol === "https:" && u.hostname ? u.href : ""; } catch { return ""; } }
@@ -25,16 +25,16 @@ function iconChoice(site) {
 }
 function updateIconEditor() {
   document.getElementById("icon-upload-wrap").hidden = iconSource.value !== "upload";
-  document.getElementById("icon-url-wrap").hidden = iconSource.value !== "url";
+
   let preview = "";
   if (iconSource.value === "upload") preview = uploadedIcon;
-  else if (iconSource.value === "url") preview = validIconUrl(iconUrlInput.value.trim());
+
   else { try { preview = remoteFavicon(new URL(normaliseUrl(urlInput.value)).hostname); } catch {} }
   iconPreview.hidden = !preview;
   if (preview) iconPreview.src = preview;
 }
 iconSource.addEventListener("change", updateIconEditor);
-iconUrlInput.addEventListener("input", updateIconEditor);
+
 urlInput.addEventListener("input", () => { if(iconSource.value === "favicon") updateIconEditor(); });
 iconUpload.addEventListener("change", async () => {
   const file = iconUpload.files?.[0]; if (!file) return;
@@ -130,8 +130,8 @@ function openModal(index = null) {
   removeButton.hidden = !site;
   uploadedIcon = site?.iconData || "";
   iconUpload.value = "";
-  iconUrlInput.value = site?.iconUrl || "";
-  iconSource.value = site?.iconData ? "upload" : site?.iconUrl ? "url" : "favicon";
+
+  iconSource.value = site?.iconData ? "upload" : "favicon";
   updateIconEditor();
   modal.hidden = false;
 
@@ -194,11 +194,8 @@ form.addEventListener("submit", event => {
   if (iconSource.value === "upload") {
     if (!uploadedIcon) { error.textContent = "Choose an image or switch to Website favicon."; return; }
     custom = {iconData:uploadedIcon};
-  } else if (iconSource.value === "url") {
-    const imageUrl = validIconUrl(iconUrlInput.value.trim());
-    if (!imageUrl) { error.textContent = "Enter a direct HTTPS image URL."; return; }
-    custom = {iconUrl:imageUrl};
   }
+  if (editingIndex !== null && iconSource.value === "favicon" && sites[index]?.iconUrl) custom = {iconUrl:sites[index].iconUrl};
   sites[index] = { name, url, ...custom };
   saveSites();
   render();
@@ -484,6 +481,7 @@ function loadPreferences() {
   applyClockVisibility();
   scheduleClock();
   applyShortcutAppearance();
+  applyWallpaper();
   render();
 }
 function applyShortcutAppearance() {
@@ -529,7 +527,18 @@ document.addEventListener("visibilitychange", scheduleClock);
 
 
 // Keep the New Tab page in sync when the extension popup changes preferences.
+const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
+window.applyNtpWallpaper = applyWallpaper;
+function applyWallpaper() {
+  const layer = document.getElementById("wallpaper-layer");
+  if (!layer) return;
+  let wallpaper = {};
+  try { wallpaper = JSON.parse(localStorage.getItem(WALLPAPER_KEY)) || {}; } catch {}
+  const image = typeof wallpaper.image === "string" && /^data:image\/(jpeg|png|webp);base64,/.test(wallpaper.image) ? wallpaper.image : "";
+  layer.style.backgroundImage = image ? `linear-gradient(rgba(0,0,0,${Math.min(90,Math.max(0,Number(wallpaper.darkness ?? 35)))/100}),rgba(0,0,0,${Math.min(90,Math.max(0,Number(wallpaper.darkness ?? 35)))/100})),url("${image}")` : "none";
+}
 window.addEventListener("storage", event => {
+  if (event.key === WALLPAPER_KEY) applyWallpaper();
   if (event.key === SETTINGS_KEY) {
     loadPreferences();
   }

@@ -1,6 +1,6 @@
 # NTP-Am — Minimalist AMOLED New Tab Page
 
-**Version 2.0.2** · **Authored by JT26-AI**
+**Version 2.0.3** · **Authored by JT26-AI**
 
 NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -18,12 +18,13 @@ NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED back
 ## Features
 
 - **Three icon styles:** Floating (borderless), Uniform Rounded Tiles, and Smoked Glass with glossy reflections and dimensional shading.
-- **Customisable shortcut icons:** Personalise each shortcut icon individually using its website favicon, your own PNG/JPG/WebP image, or a direct HTTPS image URL.
+- **Customisable shortcut icons:** Personalise each shortcut icon individually using its website favicon, your own PNG/JPG/WebP image.
 - **Flexible shortcut grid:** Choose 4, 5 or 6 columns, small/medium/large icons, and optional website labels.
 - **Drag-and-drop ordering:** Press and hold a shortcut to rearrange it.
 - **Optional clock and date:** Show or hide them in Settings.
 - **Discreet settings panel:** A 12px grey cog opens a slide-up panel; close it using × or by tapping outside.
 - **Backup and restore:** Export shortcuts, icon choices, uploaded icon images, and preferences to a JSON file.
+- **Custom wallpaper:** Upload a background image and adjust its darkness with a slider; AMOLED black remains the default.
 - **Local storage and caching:** Your setup stays in your browser, while service-worker caching can improve repeat load times.
 
 ## Getting Started
@@ -55,7 +56,7 @@ In the shortcut editor, select an icon source:
 2. **Upload image** — choose a PNG, JPG, or WebP file from your device. NTP-Am resizes uploaded icons to 96 × 96 pixels and stores them locally.
 3. **Image URL** — paste a direct HTTPS link to an image.
 
-You can switch back to the website favicon at any time. Image URLs depend on the remote image remaining available; uploaded images are stored locally.
+You can switch back to the website favicon at any time. Previously configured URL-based icons remain supported, but new URL-based icons cannot be added.
 
 ### Change the appearance
 
@@ -79,28 +80,30 @@ Backups include your shortcut order, preferences, custom icon URLs, and uploaded
 
 NTP-Am stores shortcuts, uploaded icons, and preferences locally in your browser using `localStorage`. Your personal shortcut configuration is not uploaded to GitHub.
 
-Website favicons may be fetched from Google's favicon service. If you choose an external image URL, your browser requests that image from its host.
+Website favicons may be fetched from Google's favicon service. Previously configured external image URLs may still be requested from their hosts.
 
 Clearing browser site data can remove your saved shortcuts and settings. Keep a JSON backup, especially before changing browsers or clearing data.
 
 ## Performance and Offline Use
 
-A service worker caches page resources and supported favicons to improve repeat visits. The page may load offline after an initial successful visit, depending on browser support and which resources have been cached. Remote custom image URLs may still require a connection.
+A service worker caches page resources and supported favicons to improve repeat visits. The page may load offline after an initial successful visit, depending on browser support and which resources have been cached. Older URL-based custom icons may still require a connection.
 
-## What's New in v2.0.2
+## Custom Wallpapers
 
-- Shortcuts now open immediately on a single tap, without the previous 350ms wait.
-- Shortcut editing is available via **Settings → Edit shortcuts** instead of double-tap.
-- Settings open in a taller, more compact slide-up panel for easier access to the available options.
+Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, JPG or WebP image from your device. NTP-Am resizes and compresses it locally. Use the **Wallpaper darkness** slider (0–90%) to change the appearance immediately, or select **AMOLED black** to remove the wallpaper.
 
+Uploaded wallpapers are stored in your browser and included in exported JSON backups. Keep a backup before clearing browser data.
 
-- Enhanced **Smoked Glass** icons with stronger highlights, a polished rim, and deeper shadows.
-- Added custom shortcut icons via **image upload** or **direct HTTPS image URL**.
-- Included uploaded custom icons and icon preferences in JSON backups.
+## What's New in v2.0.3
+
+- Upload a custom wallpaper and adjust its darkness using a live slider.
+- Keep pure AMOLED black as the default.
+- Simplified shortcut icons to website favicons or image uploads; older URL-based icons remain usable.
+- Include uploaded wallpaper images and darkness preferences in backups.
 
 ## Credits
 
-**NTP-Am v2.0.2**  
+**NTP-Am v2.0.3**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 

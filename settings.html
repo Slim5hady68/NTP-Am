@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="application-version" content="2.0.2">
+  <meta name="application-version" content="2.0.3">
   <title>NTP-Am settings</title>
   <link rel="stylesheet" href="popup.css">
   <style>
@@ -53,9 +53,16 @@
   .custom-select-menu button[aria-selected="true"] {background:#10313b;color:#b9f2ff;}
   .custom-select-menu button:active {background:#23323a;}
   body.panel-mode .display-options select.enhanced-native {position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+  body.panel-mode .wallpaper-options {padding:10px 0;border-bottom:1px solid #202830;}
+  .wallpaper-actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wallpaper-actions button {min-height:36px;margin:0;padding:6px 4px;font-size:12px;}
+  .wallpaper-dim-label {display:flex;justify-content:space-between;gap:10px;margin:10px 0 2px;color:#a2afb8;font-size:12px;}
+  #wallpaper-darkness {width:100%;accent-color:#64dfff;margin:4px 0 0;}
+  #wallpaper-status {min-height:0;margin:3px 0;color:#8de5ad;font-size:11px;}
   </style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js?v=202ui" defer></script>
-  <script src="settings-ui.js?v=202ui" defer></script>
+  <script src="popup.js?v=203wall" defer></script>
+  <script src="settings-ui.js?v=203wall" defer></script>
+  <script src="wallpaper.js?v=203wall" defer></script>
 </head>
 <body>
   
@@ -80,6 +87,19 @@
     <label for="icon-size">Icon size</label>
     <select id="icon-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
     <div class="setting-row labels-row"><div><strong>Show shortcut labels</strong><small>Display names beneath icons</small></div><label class="switch"><input id="show-labels" type="checkbox"><span></span></label></div>
+  </section>
+  <section class="wallpaper-options">
+    <h2>Background</h2>
+    <div class="wallpaper-actions">
+      <button type="button" id="upload-wallpaper" class="secondary">Upload wallpaper</button>
+      <button type="button" id="remove-wallpaper" class="secondary">AMOLED black</button>
+    </div>
+    <input id="wallpaper-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+    <div id="wallpaper-controls" hidden>
+      <div class="wallpaper-dim-label"><label for="wallpaper-darkness">Wallpaper darkness</label><output id="wallpaper-percent">35%</output></div>
+      <input id="wallpaper-darkness" type="range" min="0" max="90" step="5" value="35">
+    </div>
+    <p id="wallpaper-status" role="status" aria-live="polite"></p>
   </section>
   <section class="shortcut-management">
     <h2>Manage shortcuts</h2>
