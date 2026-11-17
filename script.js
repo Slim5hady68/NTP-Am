@@ -1,0 +1,488 @@
+
+"use strict";
+
+const STORAGE_KEY = "amoled-ntp-shortcuts-v2";
+const TOTAL_SLOTS = 12;
+
+const shortcuts = document.getElementById("shortcuts");
+const modal = document.getElementById("modal");
+const form = document.getElementById("shortcut-form");
+const nameInput = document.getElementById("site-name");
+const urlInput = document.getElementById("site-url");
+const title = document.getElementById("modal-title");
+const error = document.getElementById("form-error");
+const removeButton = document.getElementById("remove-shortcut");
+
+let sites = Array(TOTAL_SLOTS).fill(null);
+let editingIndex = null;
+let draggedIndex = null;
+let pendingNavigation = null;
+let pendingNavigationTimer = null;
+let highlightedTarget = null;
+
+function cancelPendingNavigation() {
+  clearTimeout(pendingNavigationTimer);
+  pendingNavigationTimer = null;
+  pendingNavigation = null;
+}
+
+
+function loadSites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+    if (Array.isArray(saved) && saved.length >= 8 && saved.length <= TOTAL_SLOTS) {
+      sites = saved.map(site => {
+        if (!site || typeof site.name !== "string" ||
+            typeof site.url !== "string") return null;
+
+        try {
+          const url = new URL(site.url);
+          if (!["https:", "http:"].includes(url.protocol)) return null;
+
+          return { name: site.name, url: url.href };
+        } catch {
+          return null;
+        }
+      });
+      sites = sites.concat(Array(TOTAL_SLOTS - sites.length).fill(null));
+    }
+  } catch {}
+}
+
+function saveSites() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sites));
+}
+
+function normaliseUrl(value) {
+  let address = value.trim();
+
+  if (!/^https?:\/\//i.test(address)) {
+    address = "https://" + address;
+  }
+
+  const url = new URL(address);
+
+  if (!["https:", "http:"].includes(url.protocol) ||
+      !url.hostname.includes(".")) {
+    throw new Error("Invalid URL");
+  }
+
+  return url.href;
+}
+
+function openModal(index = null) {
+  cancelPendingNavigation();
+  editingIndex = index;
+  error.textContent = "";
+
+  const site = index === null ? null : sites[index];
+
+  title.textContent = site ? "Edit shortcut" : "Add shortcut";
+  nameInput.value = site ? site.name : "";
+  urlInput.value = site ? site.url : "";
+
+  removeButton.hidden = !site;
+  modal.hidden = false;
+
+  setTimeout(() => nameInput.focus(), 50);
+}
+
+function closeModal() {
+  modal.hidden = true;
+  form.reset();
+  error.textContent = "";
+  editingIndex = null;
+}
+
+document.getElementById("close-modal")
+  .addEventListener("click", closeModal);
+
+document.getElementById("cancel-modal")
+  .addEventListener("click", closeModal);
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !modal.hidden) {
+    closeModal();
+  }
+});
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  error.textContent = "";
+
+  const name = nameInput.value.trim();
+
+  if (!name) {
+    error.textContent = "Please enter a name.";
+    return;
+  }
+
+  let url;
+
+  try {
+    url = normaliseUrl(urlInput.value);
+  } catch {
+    error.textContent = "Please enter a valid website URL.";
+    return;
+  }
+
+  const index = editingIndex !== null
+    ? editingIndex
+    : sites.findIndex((site, i) => i < preferences.gridColumns * 2 && site === null);
+
+  if (index < 0) {
+    error.textContent = "All visible shortcut slots are full.";
+    return;
+  }
+
+  sites[index] = { name, url };
+  saveSites();
+  render();
+  closeModal();
+});
+
+removeButton.addEventListener("click", () => {
+  if (editingIndex === null) return;
+
+  sites[editingIndex] = null;
+  saveSites();
+  render();
+  closeModal();
+});
+
+// Favicons are loaded as regular cross-origin images on GitHub Pages.
+function remoteFavicon(host) {
+  return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(host) + "&sz=64";
+}
+
+// Public HTTPS pages cannot fetch Google favicon blobs reliably because of CORS.
+// Use the image endpoint directly; browser HTTP caching still applies.
+async function getIconUrl(host) {
+  return remoteFavicon(host);
+}
+
+function makeIcon(site) {
+  const icon = document.createElement("div");
+  icon.className = "icon";
+  const img = document.createElement("img");
+  const host = new URL(site.url).hostname;
+  img.alt = "";
+  img.decoding = "async";
+  img.loading = "eager";
+  img.fetchPriority = "high";
+  img.onerror = () => {
+    img.remove();
+    icon.textContent = site.name.charAt(0).toUpperCase();
+  };
+  icon.appendChild(img);
+  // A cached Blob survives navigation and browser restarts. Ignore completion
+  // if the shortcut was replaced or removed in the meantime.
+  getIconUrl(host).then(url => {
+    if (img.parentNode === icon) img.src = url;
+  });
+  return icon;
+}
+
+function render() {
+  // Keep already-loaded icon elements when rebuilding the grid.
+  // Moving an existing image node avoids resetting its loading state.
+  const previousIcons = new Map();
+  for (const oldSlot of shortcuts.children) {
+    const oldUrl = oldSlot.dataset.siteUrl;
+    const oldIcon = oldSlot.querySelector(".icon");
+    if (oldUrl && oldIcon && !previousIcons.has(oldUrl)) {
+      previousIcons.set(oldUrl, oldIcon);
+    }
+  }
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < preferences.gridColumns * 2; i++) {
+    const site = sites[i];
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.index = String(i);
+
+    const label = document.createElement("span");
+    label.className = "label";
+
+    if (!site) {
+      slot.classList.add("empty");
+
+      const icon = document.createElement("div");
+      icon.className = "icon";
+      icon.textContent = "+";
+
+      label.textContent = "Add shortcut";
+      slot.append(icon, label);
+
+      slot.addEventListener("click", () => openModal(i));
+    } else {
+      slot.dataset.siteUrl = site.url;
+      const cachedIcon = previousIcons.get(site.url);
+      slot.append(cachedIcon || makeIcon(site));
+      previousIcons.delete(site.url);
+
+      label.textContent = site.name;
+      slot.appendChild(label);
+
+      // Hold to drag. The editor never opens from a stationary hold.
+      let pointerId = null;
+      let holdTimer = null;
+      let startX = 0, startY = 0;
+      let armed = false, moving = false, suppressClick = false;
+      let targetIndex = null;
+      let suppressionTimer = null;
+      let originRect = null;
+      let slotRects = null;
+      let liveTarget = null;
+      let lastX = 0, lastY = 0;
+      let animationFrame = null;
+
+      function updateLivePosition() {
+        animationFrame = null;
+        if (!moving || !originRect) return;
+        slot.style.transform = `translate3d(${lastX - startX}px, ${lastY - startY}px, 0) scale(1.05)`;
+      }
+      function setLiveTarget(index) {
+        if (liveTarget === index) return;
+        if (liveTarget !== null) {
+          const old = shortcuts.children[liveTarget];
+          if (old) { old.style.transform = ""; old.classList.remove("slot-displaced"); }
+        }
+        liveTarget = index;
+        if (index !== null && index !== i && slotRects) {
+          const target = shortcuts.children[index];
+          if (target) {
+            const dx = originRect.left - slotRects[index].left;
+            const dy = originRect.top - slotRects[index].top;
+            target.classList.add("slot-displaced");
+            target.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+          }
+        }
+      }
+      function findLiveTarget(x, y) {
+        if (!slotRects) return null;
+        const bounds = shortcuts.getBoundingClientRect();
+        if (x < bounds.left || x > bounds.right || y < bounds.top || y > bounds.bottom) return null;
+        let best = null, distance = Infinity;
+        for (let j = 0; j < slotRects.length; j++) {
+          const rect = slotRects[j];
+          const d = Math.hypot(x - (rect.left + rect.width / 2), y - (rect.top + rect.height / 2));
+          if (d < distance) { distance = d; best = j; }
+        }
+        return best;
+      }
+
+      function highlight(index) {
+        const next = index !== i ? index : null;
+        if (highlightedTarget === next) return;
+        if (highlightedTarget !== null) {
+          const previous = shortcuts.children[highlightedTarget];
+          if (previous) previous.classList.remove("drag-over");
+        }
+        highlightedTarget = next;
+        if (next !== null) {
+          const target = shortcuts.children[next];
+          if (target) target.classList.add("drag-over");
+        }
+      }
+      function resetGesture(cancelled = false) {
+        clearTimeout(holdTimer);
+        if (pointerId === null) return;
+        const wasDrag = armed || moving;
+        const destination = targetIndex;
+        const changed = moving && !cancelled && destination !== null && destination !== i;
+        if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+        setLiveTarget(null);
+        slot.style.transform = "";
+        slot.classList.remove("drag-ready", "dragging");
+        if (wasDrag) {
+          suppressClick = true;
+          clearTimeout(suppressionTimer);
+          suppressionTimer = setTimeout(() => { suppressClick = false; }, 700);
+        }
+        pointerId = null;
+        armed = moving = false;
+        originRect = slotRects = null;
+        liveTarget = null;
+        highlight(null);
+        if (changed) {
+          [sites[i], sites[destination]] = [sites[destination], sites[i]];
+          saveSites();
+          render();
+        }
+      }
+      slot.addEventListener("pointerdown", event => {
+        if (event.button !== 0 || pointerId !== null || !modal.hidden) return;
+        pointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
+        targetIndex = null;
+        originRect = slotRects = null;
+        liveTarget = null;
+        armed = moving = false;
+        clearTimeout(holdTimer);
+        // Capture from the start so touch moves remain delivered to this slot.
+        try { slot.setPointerCapture(event.pointerId); } catch {}
+        holdTimer = setTimeout(() => {
+          if (pointerId !== event.pointerId) return;
+          armed = true;
+          cancelPendingNavigation();
+          slotRects = Array.from(shortcuts.children, el => el.getBoundingClientRect());
+          originRect = slotRects[i];
+          slot.classList.add("drag-ready");
+        }, 450);
+      });
+      slot.addEventListener("pointermove", event => {
+        if (pointerId !== event.pointerId) return;
+        const distance = Math.hypot(event.clientX - startX, event.clientY - startY);
+        if (!armed) {
+          if (distance > 12) resetGesture(true);
+          return;
+        }
+        if (distance > 9) {
+          moving = true;
+          slot.classList.remove("drag-ready");
+          slot.classList.add("dragging");
+        }
+        if (moving) {
+          event.preventDefault();
+          lastX = event.clientX;
+          lastY = event.clientY;
+          if (animationFrame === null) animationFrame = requestAnimationFrame(updateLivePosition);
+          targetIndex = findLiveTarget(event.clientX, event.clientY);
+          setLiveTarget(targetIndex === i ? null : targetIndex);
+        }
+      });
+      slot.addEventListener("pointerup", event => {
+        if (pointerId === event.pointerId) resetGesture(false);
+      });
+      slot.addEventListener("pointercancel", event => {
+        if (pointerId === event.pointerId) resetGesture(true);
+      });
+      slot.addEventListener("lostpointercapture", event => {
+        if (pointerId === event.pointerId) resetGesture(true);
+      });
+      slot.addEventListener("contextmenu", event => {
+        event.preventDefault();
+        // A touch long-press may synthesize a context menu: never open Edit for it.
+        if (event.pointerType === "touch" || pointerId !== null) return;
+        if (modal.hidden) openModal(i);
+      });
+      slot.addEventListener("dblclick", event => {
+        event.preventDefault();
+        cancelPendingNavigation();
+        if (modal.hidden) openModal(i);
+      });
+      slot.addEventListener("click", event => {
+        if (suppressClick || !modal.hidden) {
+          event.preventDefault();
+          return;
+        }
+        // Defer opening a site until the double-tap window has passed.
+        // Otherwise the first tap navigates away just as Edit appears.
+        if (pendingNavigation !== null) {
+          const sameSlot = pendingNavigation === i;
+          cancelPendingNavigation();
+          event.preventDefault();
+          if (sameSlot) openModal(i);
+          return;
+        }
+        if (event.detail >= 2) {
+          event.preventDefault();
+          openModal(i);
+          return;
+        }
+        pendingNavigation = i;
+        pendingNavigationTimer = setTimeout(() => {
+          pendingNavigation = null;
+          pendingNavigationTimer = null;
+          if (modal.hidden) window.location.href = site.url;
+        }, 350);
+      });
+    }
+
+    fragment.appendChild(slot);
+  }
+  highlightedTarget = null;
+  shortcuts.replaceChildren(fragment);
+}
+
+
+// Clock/date preference and settings
+const SETTINGS_KEY = "ntp-am-settings-v1";
+const clockPanel = document.getElementById("clock-panel");
+const clockTime = document.getElementById("clock-time");
+const clockDate = document.getElementById("clock-date");
+
+let preferences = { showClock: true, gridColumns: 4, iconSize: "medium", showLabels: true };
+
+function loadPreferences() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch {}
+  preferences.showClock = typeof saved.showClock === "boolean" ? saved.showClock : true;
+  preferences.gridColumns = [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4;
+  preferences.iconSize = ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium";
+  preferences.showLabels = typeof saved.showLabels === "boolean" ? saved.showLabels : true;
+  applyClockVisibility();
+  scheduleClock();
+  applyShortcutAppearance();
+  render();
+}
+function applyShortcutAppearance() {
+  shortcuts.style.setProperty("--grid-columns", String(preferences.gridColumns));
+  shortcuts.dataset.iconSize = preferences.iconSize;
+  shortcuts.classList.toggle("hide-labels", !preferences.showLabels);
+}
+
+function savePreferences() {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(preferences));
+}
+
+function applyClockVisibility() {
+  clockPanel.hidden = !preferences.showClock;
+}
+
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+});
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  weekday: "long", day: "numeric", month: "long", year: "numeric"
+});
+let lastClockMinute = "";
+let clockTimer = null;
+function updateClock() {
+  if (!preferences.showClock || document.hidden) return;
+  const now = new Date();
+  const minute = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+  if (minute === lastClockMinute) return;
+  lastClockMinute = minute;
+  clockTime.textContent = timeFormatter.format(now);
+  clockDate.textContent = dateFormatter.format(now);
+}
+function scheduleClock() {
+  clearTimeout(clockTimer);
+  if (!preferences.showClock || document.hidden) return;
+  updateClock();
+  // Align updates with the minute boundary instead of formatting every 15 seconds.
+  clockTimer = setTimeout(scheduleClock, 60000 - Date.now() % 60000 + 30);
+}
+document.addEventListener("visibilitychange", scheduleClock);
+
+
+// Keep the New Tab page in sync when the extension popup changes preferences.
+window.addEventListener("storage", event => {
+  if (event.key === SETTINGS_KEY) {
+    loadPreferences();
+  }
+});
+
+
+loadSites();
+loadPreferences();

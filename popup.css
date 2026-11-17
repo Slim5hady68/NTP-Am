@@ -1,0 +1,61 @@
+/* Responsive, touch-friendly settings panel for NTP-Am */
+* { box-sizing: border-box; }
+html { margin: 0; padding: 0; background: #050607; }
+body {
+  width: 440px;
+  max-width: 100vw;
+  min-width: 0;
+  margin: 0;
+  padding: 22px 24px 18px;
+  background: #050607;
+  color: #e9f3f8;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  -webkit-text-size-adjust: 100%;
+}
+header { display: flex; align-items: center; gap: 14px; padding-bottom: 19px; border-bottom: 1px solid #202830; }
+.brand-mark { flex: 0 0 44px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; color: #b9f2ff; font-size: 27px; font-weight: 300; background: linear-gradient(135deg, #25102e, #06283a); text-shadow: 0 0 12px #36cfff; box-shadow: inset 0 0 0 1px #23465a; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .03em; }
+header p { margin: 5px 0 0; color: #9aaab5; font-size: 13px; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; border-bottom: 1px solid #202830; }
+.setting-row > div { min-width: 0; }
+strong { display: block; font-size: 16px; font-weight: 600; }
+small { display: block; margin-top: 7px; color: #a2afb8; font-size: 13px; line-height: 1.4; }
+.switch { position: relative; display: inline-block; flex: 0 0 42px; width: 42px; height: 25px; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 25px; background: #343b42; pointer-events: none; transition: .2s; }
+.switch span:before { content: ''; position: absolute; width: 19px; height: 19px; left: 3px; top: 3px; border-radius: 50%; background: #c4cbd0; transition: .2s; }
+.switch input:checked + span { background: #087da0; }
+.switch input:checked + span:before { transform: translateX(17px); background: #fff; }
+.switch input:focus-visible + span { outline: 2px solid #b9f2ff; outline-offset: 3px; }
+.backup { padding-top: 22px; }
+h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.backup p { margin: 10px 0 16px; color: #a2afb8; font-size: 13px; line-height: 1.55; }
+button { display: block; width: 100%; min-height: 48px; margin-top: 11px; padding: 12px 16px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; touch-action: manipulation; }
+button:focus-visible { outline: 2px solid #b9f2ff; outline-offset: 3px; }
+.primary { color: #001018; background: linear-gradient(100deg, #64dfff, #a5aaff); }
+.secondary { color: #d8e6ed; background: #151c22; border: 1px solid #2b3a43; }
+#status { min-height: 20px; margin: 13px 0 0; color: #8de5ad; font-size: 12px; }
+#status.error { color: #ff8989; }
+footer { padding-top: 16px; color: #7d8c96; text-align: center; font-size: 12px; letter-spacing: .03em; }
+@media (max-width: 380px) {
+  body { width: 100vw; padding: 18px 17px 16px; }
+  header { gap: 12px; }
+}
+
+.display-options { padding: 22px 0 4px; border-bottom: 1px solid #202830; }
+.display-options > label { display:block; margin:17px 0 8px; color:#a2afb8; font-size:13px; }
+.display-options select { width:100%; height:45px; border:1px solid #2b3a43; border-radius:10px; background:#151c22; color:#e9f3f8; padding:0 12px; font-size:15px; }
+.labels-row { border-bottom:0; padding:19px 0 17px; }
+
+/* Explicit touch targets for Android extension popup compatibility */
+.grid-choice-label { margin:17px 0 8px; color:#a2afb8; font-size:13px; }
+.grid-choice { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.grid-choice-button { width:100%; min-width:0; min-height:44px; margin:0; padding:8px 3px; border:1px solid #2b3a43; border-radius:9px; background:#151c22; color:#d8e6ed; font-size:13px; font-weight:600; white-space:nowrap; }
+.grid-choice-button[aria-pressed="true"] { border-color:#64dfff; background:#10313b; color:#b9f2ff; }
+html, body { max-height:100dvh; overflow-y:auto; }
+
+/* Hosted settings page: avoid popup-only width constraints */
+body {max-width:460px;min-width:0;margin:0 auto;box-sizing:border-box;}
+.back-nav {padding:14px 0 4px;}
+.back-nav a {color:#aaa;text-decoration:none;font-size:13px;}

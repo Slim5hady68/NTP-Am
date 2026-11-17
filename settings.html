@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>NTP-Am settings</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <nav class="back-nav"><a href="./">← Back to NTP-Am</a></nav>
+  <header>
+    <div class="brand-mark">A</div>
+    <div><h1>NTP-Am</h1><p>Quick settings</p></div>
+  </header>
+  <section class="setting-row">
+    <div><strong>Clock and date</strong><small>Show on your New Tab page</small></div>
+    <label class="switch"><input id="show-clock" type="checkbox"><span></span></label>
+  </section>
+  <section class="display-options">
+    <h2>Shortcut appearance</h2>
+    <div class="grid-choice-label" id="grid-choice-label">Grid columns</div>
+    <div class="grid-choice" role="group" aria-labelledby="grid-choice-label">
+      <button type="button" class="grid-choice-button" data-columns="4" aria-pressed="true">4 columns</button>
+      <button type="button" class="grid-choice-button" data-columns="5" aria-pressed="false">5 columns</button>
+      <button type="button" class="grid-choice-button" data-columns="6" aria-pressed="false">6 columns</button>
+    </div>
+    <label for="icon-size">Icon size</label>
+    <select id="icon-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
+    <div class="setting-row labels-row"><div><strong>Show shortcut labels</strong><small>Display names beneath icons</small></div><label class="switch"><input id="show-labels" type="checkbox"><span></span></label></div>
+  </section>
+  <section class="backup">
+    <h2>Shortcut backup</h2>
+    <p>Save your shortcuts or restore a previous setup.</p>
+    <button id="export-backup" class="primary">Export backup</button>
+    <button id="choose-backup" class="secondary">Restore backup</button>
+    <input id="backup-file" type="file" accept="application/json,.json" hidden>
+    <p id="status" role="status" aria-live="polite"></p>
+  </section>
+  <footer>Authored by JT26-AI</footer>
+</body>
+</html>

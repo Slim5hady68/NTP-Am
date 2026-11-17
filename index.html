@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>NTP-Am</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="clock-panel" id="clock-panel" aria-live="off">
+      <div class="clock-time" id="clock-time"></div>
+      <div class="clock-date" id="clock-date"></div>
+    </section>
+
+    <div class="shortcuts" id="shortcuts"></div>
+    <a class="settings-link" href="settings.html" aria-label="NTP-Am settings">Settings</a>
+  </main>
+
+
+  <div class="modal-overlay" id="modal" hidden>
+    <section class="modal" role="dialog"
+      aria-modal="true" aria-labelledby="modal-title">
+
+      <div class="modal-header">
+        <h2 id="modal-title">Add shortcut</h2>
+        <button class="close-button" id="close-modal"
+          aria-label="Close">×</button>
+      </div>
+
+      <form id="shortcut-form">
+        <label for="site-name">Name</label>
+        <input id="site-name" type="text"
+          placeholder="Enter name" maxlength="30" required>
+
+        <label for="site-url">Website URL</label>
+        <input id="site-url" type="text"
+          placeholder="Enter URL" inputmode="url" required>
+
+        <p class="form-error" id="form-error"></p>
+
+        <div class="modal-actions">
+          <button type="button" class="remove-button"
+            id="remove-shortcut" hidden>Remove</button>
+          <button type="button" class="cancel-button"
+            id="cancel-modal">Cancel</button>
+          <button type="submit" class="save-button">Save</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</body>
+</html>
