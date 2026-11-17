@@ -1,0 +1,34 @@
+"use strict";
+(() => {
+  const trigger = document.getElementById('open-settings');
+  const panel = document.getElementById('settings-sheet');
+  const backdrop = document.getElementById('sheet-backdrop');
+  const closeButton = document.getElementById('close-settings');
+  const handle = document.getElementById('sheet-handle-zone');
+  let open = false;
+  function setOpen(value) {
+    if (open === value) return;
+    open = value;
+    if (value) {
+      backdrop.hidden = false;
+      panel.inert = false;
+      panel.setAttribute('aria-hidden','false');
+      requestAnimationFrame(() => panel.classList.add('is-open'));
+      closeButton.focus({preventScroll:true});
+    } else {
+      panel.classList.remove('is-open');
+      backdrop.hidden = true;
+      panel.inert = true;
+      panel.setAttribute('aria-hidden','true');
+      trigger.focus({preventScroll:true});
+    }
+    trigger.setAttribute('aria-expanded',String(value));
+  }
+  trigger.addEventListener('click',() => setOpen(true));
+  closeButton.addEventListener('click',() => setOpen(false));
+  backdrop.addEventListener('click',() => setOpen(false));
+  document.addEventListener('keydown',e => { if (e.key === 'Escape' && open) setOpen(false); });
+  let startY = null;
+  handle.addEventListener('touchstart',e => {startY = e.touches[0].clientY;},{passive:true});
+  handle.addEventListener('touchend',e => {if(startY !== null && e.changedTouches[0].clientY-startY>55)setOpen(false);startY=null;},{passive:true});
+})();

@@ -16,10 +16,17 @@
     </section>
 
     <div class="shortcuts" id="shortcuts"></div>
-    <a class="settings-link" href="settings.html" aria-label="NTP-Am settings"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l-1.86 1.86A1.7 1.7 0 0 0 16 18.4a1.7 1.7 0 0 0-1 1.55V21H9v-1.05A1.7 1.7 0 0 0 8 18.4a1.7 1.7 0 0 0-1.88.34l-1.86-1.86A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.05 14H2v-4h1.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88L6.12 5.26A1.7 1.7 0 0 0 8 5.6 1.7 1.7 0 0 0 9 4.05V3h6v1.05A1.7 1.7 0 0 0 16 5.6a1.7 1.7 0 0 0 1.88-.34l1.86 1.86A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H22v4h-1.05A1.7 1.7 0 0 0 19.4 15Z"/></svg></a>
+    <button type="button" class="settings-link" id="open-settings" aria-label="Open settings" aria-controls="settings-sheet" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l-1.86 1.86A1.7 1.7 0 0 0 16 18.4a1.7 1.7 0 0 0-1 1.55V21H9v-1.05A1.7 1.7 0 0 0 8 18.4a1.7 1.7 0 0 0-1.88.34l-1.86-1.86A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.05 14H2v-4h1.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88L6.12 5.26A1.7 1.7 0 0 0 8 5.6 1.7 1.7 0 0 0 9 4.05V3h6v1.05A1.7 1.7 0 0 0 16 5.6a1.7 1.7 0 0 0 1.88-.34l1.86 1.86A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H22v4h-1.05A1.7 1.7 0 0 0 19.4 15Z"/></svg></button>
   </main>
 
 
+  <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+  <section class="settings-sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-label="NTP-Am settings" aria-hidden="true" inert>
+    <div class="sheet-handle-zone" id="sheet-handle-zone"><span class="sheet-handle" aria-hidden="true"></span></div>
+    <button class="sheet-close" id="close-settings" aria-label="Close settings">×</button>
+    <iframe id="settings-frame" title="NTP-Am settings" src="settings.html" loading="lazy"></iframe>
+  </section>
+  <script src="sheet.js" defer></script>
   <div class="modal-overlay" id="modal" hidden>
     <section class="modal" role="dialog"
       aria-modal="true" aria-labelledby="modal-title">

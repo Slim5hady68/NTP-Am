@@ -28,3 +28,7 @@ v2.1.1: Settings cog and borderless shortcut icons.
 - To update GitHub Pages, upload **all changed files including the new `sw.js`** to the repository root.
 - Visit the site once online, then close and reopen the tab to test cached loading. Service-worker support varies by browser.
 - Future updates should bump the `VERSION` constant in `sw.js` to invalidate the cached app shell.
+
+
+## v2.1.3 — Slide-up settings
+Tap the small corner cog to open settings in a slide-up sheet. Close using ×, the backdrop, Escape, or a downward swipe on the handle. Settings, backups, and local storage are unchanged. Upload all extracted files including new `sheet.js`; `sw.js` has a bumped cache version.
