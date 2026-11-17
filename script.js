@@ -429,7 +429,7 @@ const clockPanel = document.getElementById("clock-panel");
 const clockTime = document.getElementById("clock-time");
 const clockDate = document.getElementById("clock-date");
 
-let preferences = { showClock: true, gridColumns: 4, iconSize: "medium", showLabels: true };
+let preferences = { showClock: true, gridColumns: 4, iconSize: "medium", showLabels: true, iconStyle: "floating" };
 
 function loadPreferences() {
   let saved = {};
@@ -438,6 +438,7 @@ function loadPreferences() {
   preferences.gridColumns = [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4;
   preferences.iconSize = ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium";
   preferences.showLabels = typeof saved.showLabels === "boolean" ? saved.showLabels : true;
+  preferences.iconStyle = ["floating","tiles","subtle"].includes(saved.iconStyle) ? saved.iconStyle : "floating";
   applyClockVisibility();
   scheduleClock();
   applyShortcutAppearance();
@@ -446,6 +447,7 @@ function loadPreferences() {
 function applyShortcutAppearance() {
   shortcuts.style.setProperty("--grid-columns", String(preferences.gridColumns));
   shortcuts.dataset.iconSize = preferences.iconSize;
+  shortcuts.dataset.iconStyle = preferences.iconStyle;
   shortcuts.classList.toggle("hide-labels", !preferences.showLabels);
 }
 

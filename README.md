@@ -1,6 +1,6 @@
 # NTP-Am — AMOLED New Tab Page
 
-**Version 2.0**  
+**Version 2.0.1**  
 **Authored by JT26-AI**
 
 ## About NTP-Am
@@ -71,7 +71,12 @@ NTP-Am uses a service worker to cache its webpage files and supported favicons. 
 
 ## Credits
 
-**NTP-Am v2.0**  
+**NTP-Am v2.0.1**  
 **Authored by JT26-AI**
 
 *A minimalist AMOLED browsing experience designed for simplicity, speed and personalisation.*
+
+
+### Icon styles
+
+Open Settings and choose **Floating icons**, **Uniform rounded tiles**, or **Subtle dark backgrounds** under **Icon style**. The default remains Floating icons. Your choice is saved locally and included in backups.

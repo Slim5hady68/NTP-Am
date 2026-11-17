@@ -351,3 +351,10 @@ main {
 
 /* v2.1.8: ensure 12px cog remains visible against AMOLED black */
 .settings-handle-trigger svg { color:#a0a0a0 !important; stroke:#a0a0a0 !important; width:12px; height:12px; }
+
+/* v2.0.1: selectable icon treatments, with existing borderless style as default. */
+.shortcuts[data-icon-style="floating"] .slot:not(.empty) .icon {background:transparent;border:0;border-radius:16px;}
+.shortcuts[data-icon-style="tiles"] .slot:not(.empty) .icon {background:#202126;border:1px solid #35363a;border-radius:16px;}
+.shortcuts[data-icon-style="subtle"] .slot:not(.empty) .icon {background:#141414;border:0;border-radius:18px;}
+/* Icons remain centred in consistently sized touch targets in all modes. */
+.shortcuts[data-icon-style] .icon {display:flex;align-items:center;justify-content:center;}

@@ -2,7 +2,7 @@
 const STORAGE_KEY = "amoled-ntp-shortcuts-v2";
 const SETTINGS_KEY = "ntp-am-settings-v1";
 const TOTAL_SLOTS = 12;
-const DEFAULT_PREFS = {showClock:true, gridColumns:4, iconSize:"medium", showLabels:true};
+const DEFAULT_PREFS = {showClock:true, gridColumns:4, iconSize:"medium", showLabels:true, iconStyle:"floating"};
 const showClock = document.getElementById("show-clock");
 const backupInput = document.getElementById("backup-file");
 const status = document.getElementById("status");
@@ -14,7 +14,8 @@ function readPreferences() {
     showClock: typeof saved.showClock === "boolean" ? saved.showClock : true,
     gridColumns: [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4,
     iconSize: ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium",
-    showLabels: typeof saved.showLabels === "boolean" ? saved.showLabels : true
+    showLabels: typeof saved.showLabels === "boolean" ? saved.showLabels : true,
+    iconStyle: ["floating","tiles","subtle"].includes(saved.iconStyle) ? saved.iconStyle : "floating"
   };
 }
 function savePreference(key, value) {
@@ -36,6 +37,9 @@ function updateColumnButtons(value) {
 }
 const iconSizeSelect = document.getElementById("icon-size");
 const labelsToggle = document.getElementById("show-labels");
+const iconStyleSelect = document.getElementById("icon-style");
+iconStyleSelect.value = readPreferences().iconStyle;
+iconStyleSelect.addEventListener("change", () => savePreference("iconStyle", iconStyleSelect.value));
 updateColumnButtons(readPreferences().gridColumns);
 iconSizeSelect.value = readPreferences().iconSize;
 labelsToggle.checked = readPreferences().showLabels;
@@ -98,6 +102,7 @@ backupInput.addEventListener("change", async () => {
     updateColumnButtons(restored.preferences.gridColumns);
     iconSizeSelect.value = restored.preferences.iconSize;
     labelsToggle.checked = restored.preferences.showLabels;
+    iconStyleSelect.value = restored.preferences.iconStyle;
     setStatus("Backup restored successfully.");
   } catch (err) { setStatus(err.message || "Could not read that backup file.", true); }
 });

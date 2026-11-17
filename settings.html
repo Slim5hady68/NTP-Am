@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="application-version" content="2.0">
+  <meta name="application-version" content="2.0.1">
   <title>NTP-Am settings</title>
   <link rel="stylesheet" href="popup.css">
   <style>body{width:100%;max-width:540px;margin:0 auto;padding-top:14px;padding-bottom:30px}header{padding-right:8px}body.panel-mode header{display:none}body.panel-mode{padding-top:10px}body.panel-mode .setting-row{padding:13px 0}body.panel-mode .display-options{padding:12px 0 0}body.panel-mode .backup{padding-top:14px}</style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
@@ -28,6 +28,8 @@
       <button type="button" class="grid-choice-button" data-columns="5" aria-pressed="false">5 columns</button>
       <button type="button" class="grid-choice-button" data-columns="6" aria-pressed="false">6 columns</button>
     </div>
+    <label for="icon-style">Icon style</label>
+    <select id="icon-style"><option value="floating">Floating icons (AMOLED)</option><option value="tiles">Uniform rounded tiles</option><option value="subtle">Subtle dark backgrounds</option></select>
     <label for="icon-size">Icon size</label>
     <select id="icon-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
     <div class="setting-row labels-row"><div><strong>Show shortcut labels</strong><small>Display names beneath icons</small></div><label class="switch"><input id="show-labels" type="checkbox"><span></span></label></div>
