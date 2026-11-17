@@ -28,6 +28,7 @@ fileInput.addEventListener('change',async()=>{
  }catch(e){status.textContent=e.message||'Unable to process this wallpaper.';}
 });
 remove.addEventListener('click',()=>{state.image='';persist();update();});
-slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';persist();});
+slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';window.parent.postMessage({type:'ntpure-wallpaper-dim',value:state.darkness},location.origin);});
+slider.addEventListener('change',()=>{state.darkness=Number(slider.value);persist();});
 update();
 })();

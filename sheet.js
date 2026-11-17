@@ -27,6 +27,7 @@
     if (event.origin !== location.origin || event.source !== document.getElementById('settings-frame').contentWindow) return;
     if (event.data?.type === 'ntpam-edit-shortcuts') setOpen(false);
     if (event.data?.type === 'ntpam-wallpaper-updated') window.applyNtpWallpaper?.();
+    if (event.data?.type === 'ntpure-wallpaper-dim') window.applyNtpWallpaperDarkness?.(event.data.value);
     if (event.data?.type === 'ntpam-settings-height' && Number.isFinite(event.data.height)) {
       const desired=Math.max(240,Math.ceil(event.data.height)+36);
       panel.style.setProperty('--ntpam-sheet-height',Math.min(desired,window.innerHeight-2)+'px');
