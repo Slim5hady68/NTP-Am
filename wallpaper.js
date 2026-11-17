@@ -12,7 +12,8 @@ try {const stored=JSON.parse(localStorage.getItem(KEY));if(stored && typeof stor
 const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';};
 function persist() {try {if(state.image)localStorage.setItem(KEY,JSON.stringify(state));else localStorage.removeItem(KEY);window.parent.postMessage({type:'ntpam-wallpaper-updated'},location.origin);status.textContent='Background saved.';return true;}catch{status.textContent='Not enough browser storage. Try a smaller wallpaper or export a backup.';return false;}}
 fileInput.addEventListener('change',async()=>{
- const file=fileInput.files?.[0];if(!file)return;
+ const file=fileInput.files?.[0];if(!file){status.textContent='No image selected.';return;}
+ status.textContent='Processing '+file.name+'…';
  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>12*1024*1024){status.textContent='Choose a PNG, JPG or WebP under 12 MB.';return;}
  try {
   // Android WebViews may not implement createImageBitmap; decode via Image instead.
@@ -34,8 +35,8 @@ fileInput.addEventListener('change',async()=>{
   let data=canvas.toDataURL('image/jpeg',.72);
   if(data.length>1100000){const s=Math.min(1,700/Math.max(canvas.width,canvas.height));const small=document.createElement('canvas');small.width=Math.round(canvas.width*s);small.height=Math.round(canvas.height*s);small.getContext('2d').drawImage(canvas,0,0,small.width,small.height);data=small.toDataURL('image/jpeg',.60);}
   if(data.length>1100000)throw Error('Image too large after optimisation.');
-  const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();
- }catch(e){status.textContent=e.message||'Unable to process this wallpaper.';}
+  const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();status.textContent='Wallpaper saved. Close settings to view it.';
+ }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to process this wallpaper.');console.error('NTPure wallpaper upload:',e);}
 });
 remove.addEventListener('click',()=>{state.image='';persist();update();});
 slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';window.parent.postMessage({type:'ntpure-wallpaper-dim',value:state.darkness},location.origin);});

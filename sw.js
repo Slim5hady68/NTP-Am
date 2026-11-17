@@ -1,6 +1,6 @@
 /* NTPure Web v2.0: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpure-2.2-wallpaper-picker-fix2';
+const VERSION = 'ntpure-2.2-wallpaper-save-diagnostic3';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js', './settings-ui.js', './wallpaper.js'];
