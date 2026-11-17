@@ -1,49 +1,77 @@
-# NTP-Am Web v2.1.0
+# NTP-Am — AMOLED New Tab Page
 
-AMOLED new-tab dashboard, authored by JT26-AI. Converted from NTP-Am v2.0.4 for GitHub Pages.
+**Version 2.0**  
+**Authored by JT26-AI**
 
-## Publish
-1. Create a **public** GitHub repository named `NTP-Am` under `Slim5hady68`.
-2. Upload **the contents of this folder** to the root of the repository on the `main` branch (including `index.html`, not the ZIP itself).
-3. In repository **Settings → Pages**, choose **Deploy from a branch**, `main`, `/ (root)`, then Save.
-4. Once deployed, open `https://slim5hady68.github.io/NTP-Am/` and set that HTTPS URL in the Custom New Tab URL extension.
+## About NTP-Am
 
-## Important
-- The hosted website stores shortcuts/preferences in this browser's `localStorage`; data is not uploaded to GitHub.
-- Existing extension data is on a different origin and **does not migrate automatically**. Export a JSON backup from NTP-Am extension settings, then restore it using the hosted site's Settings page.
-- Backups are recommended because browser data clearing/private mode may erase local settings.
-- Favicons use Google's public icon image endpoint as ordinary images; if unavailable, a letter fallback is shown.
-- Hosting as HTTPS avoids direct `chrome_url_overrides`, but whether BareBrowser's + button remains visible must be tested on-device.
-- This is a test build, not a confirmed BareBrowser compatibility fix.
+NTP-Am is a lightweight, minimalist New Tab Page for a clean, distraction-free browsing experience. It combines a true AMOLED black background with customisable website shortcuts, without a search bar or unnecessary clutter.
 
+Originally developed as a browser extension, NTP-Am is also available as a standalone webpage hosted on GitHub Pages. This version is especially useful with Android browsers that support a custom New Tab URL.
 
-v2.1.1: Settings cog and borderless shortcut icons.
+## Features
 
+- **AMOLED black design:** Pure black background with borderless shortcut icons.
+- **Custom shortcuts:** Add, edit, remove and drag shortcuts into a preferred order.
+- **Adjustable grid:** Choose 4, 5 or 6 columns.
+- **Icon sizes:** Small, medium or large.
+- **Optional labels:** Show or hide website names.
+- **Optional clock and date:** Show or hide the clock/date display.
+- **Discreet settings:** A visible 12px grey cog in the bottom-right corner opens a slide-up settings panel.
+- **Local preferences:** Shortcuts and settings are stored in your browser.
+- **Backup and restore:** Export or import a JSON backup.
+- **Caching:** A service worker caches site files and supported favicons for faster repeat visits where supported.
 
-## v2.1.2 performance update
+## Getting Started
 
-- Service worker caches the website files on first visit, for faster repeat loads and offline access after successful installation.
-- Shortcut favicon image responses are cached locally by the service worker (up to 80 entries); normal browser caching is used as a fallback.
-- Your shortcuts and settings continue to live in browser localStorage. Clearing site data removes them.
-- To update GitHub Pages, upload **all changed files including the new `sw.js`** to the repository root.
-- Visit the site once online, then close and reopen the tab to test cached loading. Service-worker support varies by browser.
-- Future updates should bump the `VERSION` constant in `sw.js` to invalidate the cached app shell.
+Open **https://slim5hady68.github.io/NTP-Am/** in your browser.
 
+### Use as your New Tab Page in BareBrowser (Android)
 
-## v2.1.3 — Slide-up settings
-Tap the small corner cog to open settings in a slide-up sheet. Close using ×, the backdrop, Escape, or a downward swipe on the handle. Settings, backups, and local storage are unchanged. Upload all extracted files including new `sheet.js`; `sw.js` has a bumped cache version.
+1. Install or enable the **Custom New Tab URL** extension.
+2. Open its settings and enter `https://slim5hady68.github.io/NTP-Am/`.
+3. Save the URL, then open a new tab to try NTP-Am.
+4. If you previously installed the original NTP-Am extension that overrides the New Tab Page, disable it to avoid conflicts with BareBrowser's **+** button.
 
+Other browsers may use a different method to set a custom New Tab Page.
 
-v2.1.4: Replaces corner cog with bottom-centre handle; settings opens in a shorter slide-up sheet with a dimmed backdrop. Swipe down on sheet handle, tap backdrop or × to close.
+## How to Use NTP-Am
 
+### Add a shortcut
 
-v2.1.5: Settings trigger is a tiny bottom-right dot; sheet height increased and content remains scrollable on phones. Refresh after deployment to activate the updated service worker.
+1. Tap an empty **+** shortcut position.
+2. Enter a name and website URL.
+3. Tap **Save**.
 
+### Edit or remove a shortcut
 
-v2.1.6: Replaced settings trigger with small 15px cog at bottom-right. Removed swipe-to-close and sheet drag handle; close via X, backdrop tap, or Escape. All other features retained.
+Double-tap an existing shortcut to open the editor. Change its details and save, or select **Remove**.
 
+### Rearrange shortcuts
 
-v2.1.7: Reduced settings cog graphic from 15px to 12px, retaining its touch target and slide-up panel.
+Press and hold a shortcut, drag it to a new position, and release. On touchscreens, a short hold activates dragging.
 
+### Change settings
 
-v2.1.8: Explicit light-grey stroke for the 12px settings cog to keep it visible on black backgrounds.
+Tap the small grey cog in the bottom-right corner to open the slide-up settings panel. Choose the grid columns, icon size, shortcut label visibility and clock/date visibility. Close the panel with **×** or by tapping outside it.
+
+### Back up or restore
+
+Open Settings and select **Export backup** to save a JSON backup of your setup. To import one, select **Restore backup** and choose a previously exported JSON file.
+
+## Privacy and Storage
+
+NTP-Am saves your shortcuts and preferences locally using your browser's `localStorage`; it does not upload your shortcut configuration to GitHub. Website icons are requested from Google's favicon service and may be cached by the browser.
+
+Clearing browser site data, or using a private browsing session, may remove your saved setup. Export a backup before clearing browser data or changing browsers. Data from the original extension does not transfer automatically; use its backup/restore feature where available.
+
+## Performance
+
+NTP-Am uses a service worker to cache its webpage files and supported favicons. This can improve repeat loading times and may allow the page to load offline after a successful online visit. Behaviour depends on browser support and cached resources.
+
+## Credits
+
+**NTP-Am v2.0**  
+**Authored by JT26-AI**
+
+*A minimalist AMOLED browsing experience designed for simplicity, speed and personalisation.*
