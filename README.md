@@ -1,6 +1,6 @@
 # NTP-Am — Minimalist AMOLED New Tab Page
 
-**Version 2.0.2** · **Authored by JT26-AI**
+**Version 2.0.3** · **Authored by JT26-AI**
 
 NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -87,7 +87,7 @@ Clearing browser site data can remove your saved shortcuts and settings. Keep a 
 
 A service worker caches page resources and supported favicons to improve repeat visits. The page may load offline after an initial successful visit, depending on browser support and which resources have been cached. Remote custom image URLs may still require a connection.
 
-## What's New in v2.0.2
+## What's New in v2.0.3
 
 - Shortcuts now open immediately on a single tap, without the previous 350ms wait.
 - Shortcut editing is available via **Settings → Edit shortcuts** instead of double-tap.
@@ -99,8 +99,10 @@ A service worker caches page resources and supported favicons to improve repeat 
 
 ## Credits
 
-**NTP-Am v2.0.2**  
+**NTP-Am v2.0.3**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 
 *Minimalist by design. Personalised by you.*
+
+**v2.0.3 refinement:** Editing outlines now follow individual icons instead of full grid cells; normal taps no longer use pointer capture before a long-press drag begins.

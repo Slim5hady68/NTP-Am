@@ -395,11 +395,11 @@ function render() {
         liveTarget = null;
         armed = moving = false;
         clearTimeout(holdTimer);
-        // Capture from the start so touch moves remain delivered to this slot.
-        try { slot.setPointerCapture(event.pointerId); } catch {}
+        // Leave ordinary taps uncaptured so the browser can handle them naturally.
         holdTimer = setTimeout(() => {
           if (pointerId !== event.pointerId) return;
           armed = true;
+          try { slot.setPointerCapture(event.pointerId); } catch {}
           cancelPendingNavigation();
           slotRects = Array.from(shortcuts.children, el => el.getBoundingClientRect());
           originRect = slotRects[i];

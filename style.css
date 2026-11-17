@@ -402,4 +402,10 @@ main {
 .edit-mode-bar[hidden] { display:none !important; }
 .edit-mode-bar { display:flex; align-items:center; justify-content:center; gap:12px; padding:10px 14px; color:#d0d0d0; font-size:12px; }
 .edit-mode-bar button { border:1px solid #666; border-radius:12px; padding:7px 14px; background:#242424; color:#fff; font:inherit; cursor:pointer; }
-.shortcut-edit-mode .slot:not(.empty) { outline:1px dashed #777; outline-offset:3px; border-radius:14px; }
+/* Highlight the icon itself, not the full-width grid cell. */
+.shortcut-edit-mode .slot:not(.empty) { outline:none; }
+.shortcut-edit-mode .slot:not(.empty) .icon { outline:1px dashed #8a8a8a; outline-offset:5px; }
+.shortcut-edit-mode .shortcuts[data-icon-style="glass"] .slot:not(.empty) .icon { border-radius:50%; }
+.shortcut-edit-mode .slot:not(.empty) { cursor:pointer; }
+
+.shortcut-edit-mode .slot { touch-action:manipulation; }
