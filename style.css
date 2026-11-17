@@ -341,3 +341,10 @@ main {
 .settings-sheet iframe {display:block; width:100%; height:calc(100% - 38px); margin-top:38px; overflow:auto; }
 .sheet-handle-zone {height:38px;}
 @media(max-height:650px){.settings-sheet{height:min(88dvh,650px) !important;}}
+
+/* v2.1.6: small cog, no swipe gesture or panel drag handle */
+.settings-handle-trigger {right:9px !important;bottom:7px !important;display:flex;align-items:center;justify-content:center;color:#777 !important;touch-action:manipulation !important;}
+.settings-handle-trigger svg {display:block;flex:none;}
+.sheet-handle-zone,.sheet-handle {display:none !important;}
+.settings-sheet iframe {margin-top:38px;height:calc(100% - 38px);}
+.sheet-close {top:2px;right:12px;}

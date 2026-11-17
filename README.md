@@ -38,3 +38,9 @@ v2.1.4: Replaces corner cog with bottom-centre handle; settings opens in a short
 
 
 v2.1.5: Settings trigger is a tiny bottom-right dot; sheet height increased and content remains scrollable on phones. Refresh after deployment to activate the updated service worker.
+
+
+v2.1.6: Replaced settings trigger with small 15px cog at bottom-right. Removed swipe-to-close and sheet drag handle; close via X, backdrop tap, or Escape. All other features retained.
+
+
+v2.1.7: Reduced settings cog graphic from 15px to 12px, retaining its touch target and slide-up panel.

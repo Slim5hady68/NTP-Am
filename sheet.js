@@ -4,7 +4,6 @@
   const panel = document.getElementById('settings-sheet');
   const backdrop = document.getElementById('sheet-backdrop');
   const closeButton = document.getElementById('close-settings');
-  const handle = document.getElementById('sheet-handle-zone');
   let open = false;
   function setOpen(value) {
     if (open === value) return;
@@ -28,7 +27,4 @@
   closeButton.addEventListener('click',() => setOpen(false));
   backdrop.addEventListener('click',() => setOpen(false));
   document.addEventListener('keydown',e => { if (e.key === 'Escape' && open) setOpen(false); });
-  let startY = null;
-  handle.addEventListener('touchstart',e => {startY = e.touches[0].clientY;},{passive:true});
-  handle.addEventListener('touchend',e => {if(startY !== null && e.changedTouches[0].clientY-startY>55)setOpen(false);startY=null;},{passive:true});
 })();
