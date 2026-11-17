@@ -278,6 +278,7 @@ function render() {
     const site = sites[i];
     const slot = document.createElement("div");
     slot.className = "slot";
+    if (site) { slot.setAttribute("role", "link"); slot.tabIndex = 0; }
     slot.dataset.index = String(i);
 
     const label = document.createElement("span");
@@ -296,13 +297,19 @@ function render() {
       slot.addEventListener("click", () => openModal(i));
     } else {
       slot.dataset.siteUrl = site.url;
+      // Native links let the browser recognise a destination immediately.
+      const link = document.createElement("a");
+      link.href = site.url;
+      link.className = "shortcut-link";
+      link.setAttribute("aria-label", `Open ${site.name}`);
       slot.dataset.iconKey = site.iconData || site.iconUrl || "";
       const cachedIcon = previousIcons.get(site.url + "|" + (site.iconData || site.iconUrl || ""));
-      slot.append(cachedIcon || makeIcon(site));
+      link.append(cachedIcon || makeIcon(site));
       previousIcons.delete(site.url);
 
       label.textContent = site.name;
-      slot.appendChild(label);
+      link.appendChild(label);
+      slot.appendChild(link);
 
       // Hold to drag. The editor never opens from a stationary hold.
       let pointerId = null;
@@ -395,8 +402,7 @@ function render() {
       slot.addEventListener("pointerdown", event => {
         if (editMode || event.button !== 0 || pointerId !== null || !modal.hidden) return;
         pointerId = event.pointerId;
-        // Keep touch events directed to the shortcut throughout the hold and drag.
-        try { slot.setPointerCapture(event.pointerId); } catch {}
+        // Do not capture normal taps: allow native link navigation immediately.
         startX = event.clientX;
         startY = event.clientY;
         targetIndex = null;
@@ -408,6 +414,7 @@ function render() {
         holdTimer = setTimeout(() => {
           if (pointerId !== event.pointerId) return;
           armed = true;
+          try { slot.setPointerCapture(pointerId); } catch {}
           cancelPendingNavigation();
           slotRects = Array.from(shortcuts.children, el => el.getBoundingClientRect());
           originRect = slotRects[i];
@@ -450,8 +457,8 @@ function render() {
         if (event.pointerType === "touch" || pointerId !== null) return;
         if (modal.hidden) openModal(i);
       });
-      slot.addEventListener("click", event => {
-        if (suppressClick || !modal.hidden) {
+      link.addEventListener("click", event => {
+        if (suppressClick || armed || moving || !modal.hidden) {
           event.preventDefault();
           return;
         }
@@ -460,9 +467,9 @@ function render() {
           openModal(i);
           return;
         }
-        // Navigate on the first tap; no 350ms double-tap wait.
-        window.location.assign(site.url);
+        // Let the browser follow the native anchor directly.
       });
+      link.addEventListener("keydown", event => { if (event.key === " " && editMode) { event.preventDefault(); openModal(i); } });
     }
 
     fragment.appendChild(slot);
