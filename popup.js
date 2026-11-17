@@ -59,12 +59,12 @@ function readSites() {
   return Array(TOTAL_SLOTS).fill(null);
 }
 function exportBackup() {
-  const backup = { app: "NTP-Am", backupVersion: 1, exportedAt: new Date().toISOString(), shortcuts: readSites(), preferences: readPreferences(), wallpaper: JSON.parse(localStorage.getItem(WALLPAPER_KEY) || "null") };
+  const backup = { app: "NTPure", backupVersion: 1, exportedAt: new Date().toISOString(), shortcuts: readSites(), preferences: readPreferences(), wallpaper: JSON.parse(localStorage.getItem(WALLPAPER_KEY) || "null") };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "NTP-Am-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+  link.download = "NTPure-backup-" + new Date().toISOString().slice(0, 10) + ".json";
   document.body.appendChild(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   setStatus("Backup exported. Keep it somewhere safe.");
@@ -72,7 +72,7 @@ function exportBackup() {
 document.getElementById("export-backup").addEventListener("click", exportBackup);
 document.getElementById("choose-backup").addEventListener("click", () => { backupInput.value = ""; backupInput.click(); });
 function validateBackup(data) {
-  if (!data || data.app !== "NTP-Am" || data.backupVersion !== 1 || !Array.isArray(data.shortcuts) || ![8, 10, 12].includes(data.shortcuts.length)) throw new Error("This is not a valid NTP-Am backup.");
+  if (!data || !["NTPure", "NTP-Am"].includes(data.app) || data.backupVersion !== 1 || !Array.isArray(data.shortcuts) || ![8, 10, 12].includes(data.shortcuts.length)) throw new Error("This is not a valid NTPure or NTP-Am backup.");
   const shortcuts = data.shortcuts.map(site => {
     if (site === null) return null;
     if (!site || typeof site.name !== "string" || typeof site.url !== "string") throw new Error("The backup contains an invalid shortcut.");
@@ -113,7 +113,7 @@ backupInput.addEventListener("change", async () => {
   try {
     const data = JSON.parse(await file.text());
     const restored = validateBackup(data);
-    if (!window.confirm("Restore this NTP-Am backup? Your current shortcuts, preferences and wallpaper will be replaced.")) { setStatus("Restore cancelled."); return; }
+    if (!window.confirm("Restore this NTPure backup? Your current shortcuts, preferences and wallpaper will be replaced.")) { setStatus("Restore cancelled."); return; }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(restored.shortcuts));
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(restored.preferences));
     if(restored.wallpaper)localStorage.setItem(WALLPAPER_KEY,JSON.stringify(restored.wallpaper));else localStorage.removeItem(WALLPAPER_KEY);

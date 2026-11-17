@@ -1,17 +1,17 @@
-# NTP-Am — Minimalist AMOLED New Tab Page
+# NTPure — Minimalist Customisable New Tab Page
 
 **Version 2.1** · **Authored by JT26-AI**
 
-NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
+NTPure is a lightweight, customisable New Tab Page with an optional true-black AMOLED background or your own wallpaper. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
-**Try NTP-Am:** https://slim5hady68.github.io/NTP-Am/
+**Try NTPure (after publishing):** https://slim5hady68.github.io/NTPure/
 
 ## Screenshots
 
 <p align="center">
-  <a href="images/smoked-glass.png"><img src="images/smoked-glass.png" alt="NTP-Am Smoked Glass shortcuts" width="30%"></a>
-  <a href="images/settings.png"><img src="images/settings.png" alt="NTP-Am appearance settings" width="30%"></a>
-  <a href="images/shortcut-editor.png"><img src="images/shortcut-editor.png" alt="NTP-Am shortcut editor" width="30%"></a>
+  <a href="images/smoked-glass.png"><img src="images/smoked-glass.png" alt="NTPure Smoked Glass shortcuts" width="30%"></a>
+  <a href="images/settings.png"><img src="images/settings.png" alt="NTPure appearance settings" width="30%"></a>
+  <a href="images/shortcut-editor.png"><img src="images/shortcut-editor.png" alt="NTPure shortcut editor" width="30%"></a>
 </p>
 <p align="center"><sub>Smoked Glass icons · Appearance settings · Shortcut editor (tap an image for full size)</sub></p>
 
@@ -27,14 +27,18 @@ NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED back
 - **Custom wallpaper:** Upload a background image and adjust its darkness with a slider; AMOLED black remains the default.
 - **Local storage and caching:** Your setup stays in your browser, while service-worker caching can improve repeat load times.
 
+## Moving from NTP-Am to NTPure
+
+**Important:** Renaming the GitHub repository changes the GitHub Pages URL. Browser storage does **not** automatically move between `/NTP-Am/` and `/NTPure/`. Before switching, open the old NTP-Am page and use **Settings → Export backup**. After uploading NTPure and opening the new URL, use **Settings → Restore backup**. NTPure accepts backups created by NTP-Am as well as NTPure. Update your BareBrowser Custom New Tab URL to the new address only after restoring and verifying your shortcuts and wallpaper.
+
 ## Getting Started
 
-Open **https://slim5hady68.github.io/NTP-Am/**.
+Open **https://slim5hady68.github.io/NTPure/**.
 
 ### Use with BareBrowser on Android
 
 1. Install or enable the **Custom New Tab URL** extension.
-2. Set its URL to `https://slim5hady68.github.io/NTP-Am/`.
+2. Set its URL to `https://slim5hady68.github.io/NTPure/`.
 3. Save and open a new tab.
 
 Other browsers may offer different ways to configure a custom New Tab Page.
@@ -53,7 +57,7 @@ Other browsers may offer different ways to configure a custom New Tab Page.
 In the shortcut editor, select an icon source:
 
 1. **Website favicon** — use the website's automatically retrieved icon.
-2. **Upload image** — choose a PNG, JPG, or WebP file from your device. NTP-Am resizes uploaded icons to 96 × 96 pixels and stores them locally.
+2. **Upload image** — choose a PNG, JPG, or WebP file from your device. NTPure resizes uploaded icons to 96 × 96 pixels and stores them locally.
 
 You can switch back to the website favicon at any time. Uploaded icons are stored locally and can be included in your backups.
 
@@ -77,7 +81,7 @@ Backups include your shortcut order, preferences, uploaded icon images, and wall
 
 ## Privacy and Storage
 
-NTP-Am stores shortcuts, uploaded icons, and preferences locally in your browser using `localStorage`. Your personal shortcut configuration is not uploaded to GitHub.
+NTPure stores shortcuts, uploaded icons, and preferences locally in your browser using `localStorage`. Your personal shortcut configuration is not uploaded to GitHub.
 
 Website favicons may be fetched from Google's favicon service.
 
@@ -85,7 +89,7 @@ Clearing browser site data can remove your saved shortcuts and settings. Keep a 
 
 ## Custom Wallpapers
 
-Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, JPG or WebP image from your device. NTP-Am resizes and compresses it locally. Use the **Wallpaper darkness** slider (0–90%) to change the appearance immediately, or select **AMOLED black** to remove the wallpaper.
+Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, JPG or WebP image from your device. NTPure resizes and compresses it locally. Use the **Wallpaper darkness** slider (0–90%) to change the appearance immediately, or select **AMOLED black** to remove the wallpaper.
 
 Uploaded wallpapers are stored in your browser and included in exported JSON backups. Keep a backup before clearing browser data.
 
@@ -98,7 +102,7 @@ Uploaded wallpapers are stored in your browser and included in exported JSON bac
 
 ## Credits
 
-**NTP-Am v2.1**  
+**NTPure v2.1**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 
