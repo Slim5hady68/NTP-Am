@@ -54,16 +54,23 @@ iconUpload.addEventListener("change", async () => {
 let sites = Array(TOTAL_SLOTS).fill(null);
 let editingIndex = null;
 let draggedIndex = null;
-let pendingNavigation = null;
-let pendingNavigationTimer = null;
+let editMode = false;
 let highlightedTarget = null;
 
-function cancelPendingNavigation() {
-  clearTimeout(pendingNavigationTimer);
-  pendingNavigationTimer = null;
-  pendingNavigation = null;
-}
+function cancelPendingNavigation() { /* Navigation is now immediate. */ }
 
+function setEditMode(enabled) {
+  editMode = Boolean(enabled);
+  document.body.classList.toggle('shortcut-edit-mode', editMode);
+  const bar = document.getElementById('edit-mode-bar');
+  bar.hidden = !editMode;
+  render();
+}
+window.addEventListener('message', event => {
+  if (event.origin !== location.origin || event.source !== document.getElementById('settings-frame').contentWindow) return;
+  if (event.data?.type === 'ntpam-edit-shortcuts') setEditMode(true);
+});
+document.getElementById('finish-editing').addEventListener('click', () => setEditMode(false));
 
 function loadSites() {
   try {
@@ -379,7 +386,7 @@ function render() {
         }
       }
       slot.addEventListener("pointerdown", event => {
-        if (event.button !== 0 || pointerId !== null || !modal.hidden) return;
+        if (editMode || event.button !== 0 || pointerId !== null || !modal.hidden) return;
         pointerId = event.pointerId;
         startX = event.clientX;
         startY = event.clientY;
@@ -435,36 +442,18 @@ function render() {
         if (event.pointerType === "touch" || pointerId !== null) return;
         if (modal.hidden) openModal(i);
       });
-      slot.addEventListener("dblclick", event => {
-        event.preventDefault();
-        cancelPendingNavigation();
-        if (modal.hidden) openModal(i);
-      });
       slot.addEventListener("click", event => {
         if (suppressClick || !modal.hidden) {
           event.preventDefault();
           return;
         }
-        // Defer opening a site until the double-tap window has passed.
-        // Otherwise the first tap navigates away just as Edit appears.
-        if (pendingNavigation !== null) {
-          const sameSlot = pendingNavigation === i;
-          cancelPendingNavigation();
-          event.preventDefault();
-          if (sameSlot) openModal(i);
-          return;
-        }
-        if (event.detail >= 2) {
+        if (editMode) {
           event.preventDefault();
           openModal(i);
           return;
         }
-        pendingNavigation = i;
-        pendingNavigationTimer = setTimeout(() => {
-          pendingNavigation = null;
-          pendingNavigationTimer = null;
-          if (modal.hidden) window.location.href = site.url;
-        }, 350);
+        // Navigate on the first tap; no 350ms double-tap wait.
+        window.location.assign(site.url);
       });
     }
 

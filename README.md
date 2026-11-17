@@ -1,6 +1,6 @@
 # NTP-Am — Minimalist AMOLED New Tab Page
 
-**Version 2.0.1** · **Authored by JT26-AI**
+**Version 2.0.2** · **Authored by JT26-AI**
 
 NTP-Am is a lightweight, customisable New Tab Page with a true-black AMOLED background. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -43,7 +43,7 @@ Other browsers may offer different ways to configure a custom New Tab Page.
 ### Add, edit, or remove shortcuts
 
 - **Add:** Tap an empty **+** position, enter a website name and URL, then save.
-- **Edit:** Double-tap an existing shortcut to open its editor.
+- **Edit:** Open Settings → **Edit shortcuts**, then tap the shortcut you want to change. Tap **Done** to return to normal browsing.
 - **Remove:** Open the shortcut editor and choose **Remove**.
 - **Rearrange:** Press and hold a shortcut, move it to another position, then release.
 
@@ -87,7 +87,11 @@ Clearing browser site data can remove your saved shortcuts and settings. Keep a 
 
 A service worker caches page resources and supported favicons to improve repeat visits. The page may load offline after an initial successful visit, depending on browser support and which resources have been cached. Remote custom image URLs may still require a connection.
 
-## What's New in v2.0.1
+## What's New in v2.0.2
+
+- Shortcuts now open immediately on a single tap, without the previous 350ms wait.
+- Shortcut editing is available via **Settings → Edit shortcuts** instead of double-tap.
+
 
 - Enhanced **Smoked Glass** icons with stronger highlights, a polished rim, and deeper shadows.
 - Added custom shortcut icons via **image upload** or **direct HTTPS image URL**.
@@ -95,7 +99,7 @@ A service worker caches page resources and supported favicons to improve repeat 
 
 ## Credits
 
-**NTP-Am v2.0.1**  
+**NTP-Am v2.0.2**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 

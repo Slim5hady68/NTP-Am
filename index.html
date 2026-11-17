@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="application-version" content="2.0.1">
+  <meta name="application-version" content="2.0.2">
   <title>NTP-Am</title>
-  <link rel="stylesheet" href="style.css?v=201">
-  <script src="script.js?v=201" defer></script>
+  <link rel="stylesheet" href="style.css?v=202">
+  <script src="script.js?v=202" defer></script>
 </head>
 <body>
   <main>
@@ -16,6 +16,7 @@
       <div class="clock-date" id="clock-date"></div>
     </section>
 
+    <div id="edit-mode-bar" class="edit-mode-bar" hidden><span>Editing shortcuts — tap an icon to edit</span><button id="finish-editing" type="button">Done</button></div>
     <div class="shortcuts" id="shortcuts"></div>
     <button type="button" class="settings-handle-trigger" id="open-settings" aria-label="Open settings" aria-controls="settings-sheet" aria-expanded="false"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A0A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l-1.91 1.91A1.65 1.65 0 0 0 16 18.4a1.65 1.65 0 0 0-1 1.51V21H9v-1.09A1.65 1.65 0 0 0 8 18.4a1.65 1.65 0 0 0-1.82.33l-1.91-1.91A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H2v-4h1.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l1.91-1.91A1.65 1.65 0 0 0 8 5.6a1.65 1.65 0 0 0 1-1.51V3h6v1.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l1.91 1.91A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H22v4h-1.09A1.65 1.65 0 0 0 19.4 15Z"/></svg></button>
   </main>
@@ -26,7 +27,7 @@
     <button class="sheet-close" id="close-settings" aria-label="Close settings">×</button>
     <iframe id="settings-frame" title="NTP-Am settings" src="settings.html?panel=1"></iframe>
   </section>
-  <script src="sheet.js?v=201" defer></script>
+  <script src="sheet.js?v=202" defer></script>
   <div class="modal-overlay" id="modal" hidden>
     <section class="modal" role="dialog"
       aria-modal="true" aria-labelledby="modal-title">

@@ -23,6 +23,9 @@
     }
     trigger.setAttribute('aria-expanded',String(value));
   }
+  window.addEventListener('message', event => {
+    if (event.origin === location.origin && event.source === document.getElementById('settings-frame').contentWindow && event.data?.type === 'ntpam-edit-shortcuts') setOpen(false);
+  });
   trigger.addEventListener('click',() => setOpen(true));
   closeButton.addEventListener('click',() => setOpen(false));
   backdrop.addEventListener('click',() => setOpen(false));

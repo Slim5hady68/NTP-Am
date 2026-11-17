@@ -117,3 +117,13 @@ backupInput.addEventListener("change", async () => {
     setStatus("Backup restored successfully.");
   } catch (err) { setStatus(err.message || "Could not read that backup file.", true); }
 });
+
+// Switch the parent New Tab Page into shortcut editing mode.
+document.getElementById('edit-shortcuts').addEventListener('click', () => {
+  if (window.parent !== window) {
+    window.parent.postMessage({type:'ntpam-edit-shortcuts'}, location.origin);
+    setStatus('Tap a shortcut to edit it, then select Done.');
+  } else {
+    setStatus('Open Settings from the New Tab Page to edit shortcuts.', true);
+  }
+});

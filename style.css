@@ -397,3 +397,9 @@ main {
 #icon-upload-wrap small {display:block;color:#aaa;margin:5px 0 12px;}
 .icon-preview-row {display:flex;align-items:center;gap:14px;color:#aaa;font-size:13px;margin:3px 0 12px;}
 .icon-preview-row img {height:48px;width:48px;object-fit:contain;border-radius:50%;background:#202020;}
+
+/* v2.0.2: shortcut editing mode */
+.edit-mode-bar[hidden] { display:none !important; }
+.edit-mode-bar { display:flex; align-items:center; justify-content:center; gap:12px; padding:10px 14px; color:#d0d0d0; font-size:12px; }
+.edit-mode-bar button { border:1px solid #666; border-radius:12px; padding:7px 14px; background:#242424; color:#fff; font:inherit; cursor:pointer; }
+.shortcut-edit-mode .slot:not(.empty) { outline:1px dashed #777; outline-offset:3px; border-radius:14px; }

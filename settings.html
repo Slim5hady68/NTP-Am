@@ -8,7 +8,7 @@
   <title>NTP-Am settings</title>
   <link rel="stylesheet" href="popup.css">
   <style>body{width:100%;max-width:540px;margin:0 auto;padding-top:14px;padding-bottom:30px}header{padding-right:8px}body.panel-mode header{display:none}body.panel-mode{padding-top:10px}body.panel-mode .setting-row{padding:13px 0}body.panel-mode .display-options{padding:12px 0 0}body.panel-mode .backup{padding-top:14px}</style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js" defer></script>
+  <script src="popup.js?v=202" defer></script>
 </head>
 <body>
   
@@ -33,6 +33,11 @@
     <label for="icon-size">Icon size</label>
     <select id="icon-size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
     <div class="setting-row labels-row"><div><strong>Show shortcut labels</strong><small>Display names beneath icons</small></div><label class="switch"><input id="show-labels" type="checkbox"><span></span></label></div>
+  </section>
+  <section class="shortcut-management">
+    <h2>Manage shortcuts</h2>
+    <p>Choose Edit shortcuts, then tap an icon to change its name, website, or custom image. Tap Done when finished.</p>
+    <button type="button" id="edit-shortcuts" class="secondary">Edit shortcuts</button>
   </section>
   <section class="backup">
     <h2>Shortcut backup</h2>
