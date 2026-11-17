@@ -278,7 +278,6 @@ function render() {
     const site = sites[i];
     const slot = document.createElement("div");
     slot.className = "slot";
-    if (site) { slot.setAttribute("role", "link"); slot.tabIndex = 0; }
     slot.dataset.index = String(i);
 
     const label = document.createElement("span");
@@ -402,7 +401,8 @@ function render() {
       slot.addEventListener("pointerdown", event => {
         if (editMode || event.button !== 0 || pointerId !== null || !modal.hidden) return;
         pointerId = event.pointerId;
-        // Do not capture normal taps: allow native link navigation immediately.
+        // Capture from pointerdown to retain reliable drag tracking in Android WebView.
+        try { slot.setPointerCapture(event.pointerId); } catch {}
         startX = event.clientX;
         startY = event.clientY;
         targetIndex = null;
@@ -414,7 +414,6 @@ function render() {
         holdTimer = setTimeout(() => {
           if (pointerId !== event.pointerId) return;
           armed = true;
-          try { slot.setPointerCapture(pointerId); } catch {}
           cancelPendingNavigation();
           slotRects = Array.from(shortcuts.children, el => el.getBoundingClientRect());
           originRect = slotRects[i];
