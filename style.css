@@ -418,3 +418,8 @@ main {
 .settings-sheet {height:calc(100dvh - 8px) !important;max-height:calc(100dvh - 8px) !important;}
 .slot {touch-action:none !important;-webkit-user-select:none;user-select:none;}
 .slot.drag-ready,.slot.dragging {z-index:12;position:relative;}
+
+/* Compact content-sized slide-up panel. Inline height is set by measured iframe content. */
+.settings-sheet {height:min(74dvh,650px) !important;max-height:calc(100dvh - 16px) !important;transition:transform .24s ease,height .16s ease;}
+.settings-sheet iframe {margin-top:38px;height:calc(100% - 38px);}
+@media(max-height:650px){.settings-sheet{height:min(85dvh,650px) !important;}}
