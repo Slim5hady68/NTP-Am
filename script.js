@@ -66,7 +66,7 @@ function positionEditModeBar() {
   const rect=grid.getBoundingClientRect();
   const height=bar.getBoundingClientRect().height;
   // Keep the prompt near the first row, with room for the phone status area.
-  bar.style.top=Math.max(42,Math.round(rect.top-height-8))+'px';
+  bar.style.setProperty('--edit-prompt-top',Math.max(42,Math.round(rect.top-height-12))+'px');
 }
 function setEditMode(enabled) {
   editMode = Boolean(enabled);
@@ -74,7 +74,7 @@ function setEditMode(enabled) {
   const bar = document.getElementById('edit-mode-bar');
   bar.hidden = !editMode;
   render();
-  if(editMode) requestAnimationFrame(positionEditModeBar);
+  if(editMode) { positionEditModeBar(); requestAnimationFrame(positionEditModeBar); }
 }
 window.addEventListener('message', event => {
   if (event.origin !== location.origin || event.source !== document.getElementById('settings-frame').contentWindow) return;

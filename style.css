@@ -459,3 +459,15 @@ main {position:relative;z-index:1;}
 }
 .edit-mode-bar button {padding:5px 11px;white-space:nowrap;}
 @media(max-width:380px){.edit-mode-bar{font-size:11px;gap:6px;padding:4px 6px;}}
+
+/* Edit prompt anchored to the first row, not the top of the viewport. */
+body.shortcut-edit-mode #edit-mode-bar {
+  position:fixed !important;
+  top:var(--edit-prompt-top, 46dvh) !important;
+  bottom:auto !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+  margin:0 !important;
+  white-space:nowrap;
+}
