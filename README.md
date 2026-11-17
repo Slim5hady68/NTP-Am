@@ -44,3 +44,6 @@ v2.1.6: Replaced settings trigger with small 15px cog at bottom-right. Removed s
 
 
 v2.1.7: Reduced settings cog graphic from 15px to 12px, retaining its touch target and slide-up panel.
+
+
+v2.1.8: Explicit light-grey stroke for the 12px settings cog to keep it visible on black backgrounds.

@@ -348,3 +348,6 @@ main {
 .sheet-handle-zone,.sheet-handle {display:none !important;}
 .settings-sheet iframe {margin-top:38px;height:calc(100% - 38px);}
 .sheet-close {top:2px;right:12px;}
+
+/* v2.1.8: ensure 12px cog remains visible against AMOLED black */
+.settings-handle-trigger svg { color:#a0a0a0 !important; stroke:#a0a0a0 !important; width:12px; height:12px; }
