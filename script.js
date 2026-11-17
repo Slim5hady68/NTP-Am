@@ -155,6 +155,14 @@ removeButton.addEventListener("click", () => {
   closeModal();
 });
 
+// Install a local app-shell and favicon cache for repeat visits.
+// The page remains usable when service workers are unsupported.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+  });
+}
+
 // Favicons are loaded as regular cross-origin images on GitHub Pages.
 function remoteFavicon(host) {
   return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(host) + "&sz=64";
@@ -180,7 +188,7 @@ function makeIcon(site) {
     icon.textContent = site.name.charAt(0).toUpperCase();
   };
   icon.appendChild(img);
-  // A cached Blob survives navigation and browser restarts. Ignore completion
+  // The service worker caches favicon responses where supported. Ignore completion
   // if the shortcut was replaced or removed in the meantime.
   getIconUrl(host).then(url => {
     if (img.parentNode === icon) img.src = url;

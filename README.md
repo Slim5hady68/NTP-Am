@@ -18,3 +18,13 @@ AMOLED new-tab dashboard, authored by JT26-AI. Converted from NTP-Am v2.0.4 for 
 
 
 v2.1.1: Settings cog and borderless shortcut icons.
+
+
+## v2.1.2 performance update
+
+- Service worker caches the website files on first visit, for faster repeat loads and offline access after successful installation.
+- Shortcut favicon image responses are cached locally by the service worker (up to 80 entries); normal browser caching is used as a fallback.
+- Your shortcuts and settings continue to live in browser localStorage. Clearing site data removes them.
+- To update GitHub Pages, upload **all changed files including the new `sw.js`** to the repository root.
+- Visit the site once online, then close and reopen the tab to test cached loading. Service-worker support varies by browser.
+- Future updates should bump the `VERSION` constant in `sw.js` to invalidate the cached app shell.
