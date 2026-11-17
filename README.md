@@ -32,3 +32,6 @@ v2.1.1: Settings cog and borderless shortcut icons.
 
 ## v2.1.3 — Slide-up settings
 Tap the small corner cog to open settings in a slide-up sheet. Close using ×, the backdrop, Escape, or a downward swipe on the handle. Settings, backups, and local storage are unchanged. Upload all extracted files including new `sheet.js`; `sw.js` has a bumped cache version.
+
+
+v2.1.4: Replaces corner cog with bottom-centre handle; settings opens in a shorter slide-up sheet with a dimmed backdrop. Swipe down on sheet handle, tap backdrop or × to close.
