@@ -15,3 +15,6 @@ AMOLED new-tab dashboard, authored by JT26-AI. Converted from NTP-Am v2.0.4 for 
 - Favicons use Google's public icon image endpoint as ordinary images; if unavailable, a letter fallback is shown.
 - Hosting as HTTPS avoids direct `chrome_url_overrides`, but whether BareBrowser's + button remains visible must be tested on-device.
 - This is a test build, not a confirmed BareBrowser compatibility fix.
+
+
+v2.1.1: Settings cog and borderless shortcut icons.
