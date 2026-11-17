@@ -413,3 +413,8 @@ main {
 /* v2.0.2: taller settings sheet to show more options without extra scrolling. */
 .settings-sheet { height: min(94dvh, 980px) !important; max-height: calc(100dvh - 10px) !important; }
 @media (max-height: 650px) { .settings-sheet {height: calc(100dvh - 8px) !important;} }
+
+/* v2.0.2 mobile settings and drag repair */
+.settings-sheet {height:calc(100dvh - 8px) !important;max-height:calc(100dvh - 8px) !important;}
+.slot {touch-action:none !important;-webkit-user-select:none;user-select:none;}
+.slot.drag-ready,.slot.dragging {z-index:12;position:relative;}

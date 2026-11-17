@@ -388,6 +388,8 @@ function render() {
       slot.addEventListener("pointerdown", event => {
         if (editMode || event.button !== 0 || pointerId !== null || !modal.hidden) return;
         pointerId = event.pointerId;
+        // Keep touch events directed to the shortcut throughout the hold and drag.
+        try { slot.setPointerCapture(event.pointerId); } catch {}
         startX = event.clientX;
         startY = event.clientY;
         targetIndex = null;
@@ -399,7 +401,6 @@ function render() {
         holdTimer = setTimeout(() => {
           if (pointerId !== event.pointerId) return;
           armed = true;
-          try { slot.setPointerCapture(event.pointerId); } catch {}
           cancelPendingNavigation();
           slotRects = Array.from(shortcuts.children, el => el.getBoundingClientRect());
           originRect = slotRects[i];

@@ -7,27 +7,30 @@
   <meta name="application-version" content="2.0.2">
   <title>NTP-Am settings</title>
   <link rel="stylesheet" href="popup.css">
-  <style>body{width:100%;max-width:540px;margin:0 auto;padding-top:14px;padding-bottom:30px}header{padding-right:8px}body.panel-mode header{display:none}body.panel-mode{padding-top:10px}body.panel-mode .setting-row{padding:13px 0}body.panel-mode .display-options{padding:12px 0 0}body.panel-mode .backup{padding-top:14px}body.panel-mode{max-width:540px;padding:4px 18px 10px !important;font-size:14px}
-body.panel-mode .setting-row{padding:8px 0 !important}
-body.panel-mode .display-options{padding:8px 0 2px !important}
-body.panel-mode .display-options > label{margin:8px 0 4px}
-body.panel-mode .grid-choice-label{margin:8px 0 5px}
-body.panel-mode .grid-choice-button{min-height:36px;padding:6px 2px}
-body.panel-mode .display-options select{height:38px}
-body.panel-mode .labels-row{padding:8px 0 !important}
-body.panel-mode .shortcut-management{padding:8px 0}
-body.panel-mode .shortcut-management h2{margin-bottom:4px}
-body.panel-mode .shortcut-management p{margin:4px 0;line-height:1.35}
-body.panel-mode .shortcut-management button{min-height:36px;padding:7px;margin-top:5px}
-body.panel-mode .backup{padding-top:8px !important}
-body.panel-mode .backup p{margin:5px 0 7px;line-height:1.35}
-body.panel-mode .backup button{min-height:36px;padding:7px;margin-top:6px}
-body.panel-mode #status{min-height:0;margin-top:5px}
-body.panel-mode footer{padding-top:6px}
-body.panel-mode h2{font-size:15px}
-body.panel-mode small{margin-top:3px}
-</style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js?v=202" defer></script>
+  <style>
+  body.panel-mode {width:100%;max-width:540px;margin:0 auto;padding:2px 16px 8px !important;font-size:13px;}
+  body.panel-mode header{display:none}
+  body.panel-mode .setting-row{padding:5px 0 !important;gap:8px}
+  body.panel-mode .display-options{padding:5px 0 0 !important}
+  body.panel-mode h2{font-size:14px;margin:0 0 3px}
+  body.panel-mode strong{font-size:13px}
+  body.panel-mode small{font-size:11px;margin-top:1px;line-height:1.15}
+  body.panel-mode .grid-choice-label{margin:4px 0 3px;font-size:11px}
+  body.panel-mode .grid-choice-button{min-height:30px;padding:4px 2px;font-size:11px}
+  body.panel-mode .display-options > label{margin:5px 0 3px;font-size:11px}
+  body.panel-mode .display-options select{height:32px;font-size:13px}
+  body.panel-mode .labels-row{padding:5px 0 !important}
+  body.panel-mode .shortcut-management{padding:5px 0 !important}
+  body.panel-mode .shortcut-management p{display:none}
+  body.panel-mode .shortcut-management button{min-height:32px;padding:5px;margin-top:3px;font-size:12px}
+  body.panel-mode .backup{padding-top:5px !important}
+  body.panel-mode .backup > p:not(#status){display:none}
+  body.panel-mode .backup button{display:inline-block;width:calc(50% - 4px);min-height:34px;padding:5px;margin:5px 4px 0 0;font-size:12px}
+  body.panel-mode .backup button + button{margin-right:0}
+  body.panel-mode #status{min-height:0;margin:3px 0;font-size:11px}
+  body.panel-mode footer{padding-top:5px;font-size:10px}
+  </style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
+  <script src="popup.js?v=202fix2" defer></script>
 </head>
 <body>
   
