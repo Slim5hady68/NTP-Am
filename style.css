@@ -440,3 +440,22 @@ main {position:relative;z-index:1;}
 /* v2.1: sheet follows the actual content height instead of a fixed tall minimum. */
 .settings-sheet {height:min(var(--ntpam-sheet-height, 650px), calc(100dvh - 2px)) !important;max-height:calc(100dvh - 2px) !important;}
 .settings-sheet iframe {margin-top:32px !important;height:calc(100% - 32px) !important;}
+
+/* Keep edit-mode guidance immediately above the actual shortcut grid. */
+.edit-mode-bar {
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:calc(100vw - 20px);
+  z-index:4;
+  padding:5px 9px;
+  gap:8px;
+  border-radius:12px;
+  background:rgba(13,16,18,.90);
+  font-size:12px;
+  line-height:1.2;
+}
+.edit-mode-bar button {padding:5px 11px;white-space:nowrap;}
+@media(max-width:380px){.edit-mode-bar{font-size:11px;gap:6px;padding:4px 6px;}}

@@ -59,12 +59,22 @@ let highlightedTarget = null;
 
 function cancelPendingNavigation() { /* Navigation is now immediate. */ }
 
+function positionEditModeBar() {
+  const bar=document.getElementById('edit-mode-bar');
+  const grid=document.getElementById('shortcuts');
+  if(bar.hidden || !grid) return;
+  const rect=grid.getBoundingClientRect();
+  const height=bar.getBoundingClientRect().height;
+  // Keep the prompt near the first row, with room for the phone status area.
+  bar.style.top=Math.max(42,Math.round(rect.top-height-8))+'px';
+}
 function setEditMode(enabled) {
   editMode = Boolean(enabled);
   document.body.classList.toggle('shortcut-edit-mode', editMode);
   const bar = document.getElementById('edit-mode-bar');
   bar.hidden = !editMode;
   render();
+  if(editMode) requestAnimationFrame(positionEditModeBar);
 }
 window.addEventListener('message', event => {
   if (event.origin !== location.origin || event.source !== document.getElementById('settings-frame').contentWindow) return;
@@ -547,3 +557,6 @@ window.addEventListener("storage", event => {
 
 loadSites();
 loadPreferences();
+
+window.addEventListener('resize',()=>{if(editMode)positionEditModeBar();});
+if('ResizeObserver' in window) new ResizeObserver(()=>{if(editMode)positionEditModeBar();}).observe(document.getElementById('shortcuts'));
