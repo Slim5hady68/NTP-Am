@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#000000">
   <meta name="application-version" content="2.2">
   <title>NTPure</title>
-  <link rel="stylesheet" href="style.css?v=22perf1">
-  <script src="script.js?v=22perf1" defer></script>
+  <link rel="stylesheet" href="style.css?v=22fix2">
+  <script src="script.js?v=22fix2" defer></script>
 </head>
 <body>
   <div id="wallpaper-layer" aria-hidden="true"></div>
@@ -26,9 +26,9 @@
   <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
   <section class="settings-sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-label="NTPure settings" aria-hidden="true" inert>
     <button class="sheet-close" id="close-settings" aria-label="Close settings">×</button>
-    <iframe id="settings-frame" title="NTPure settings" src="settings.html?panel=1&v=22perf1"></iframe>
+    <iframe id="settings-frame" title="NTPure settings" src="settings.html?panel=1&v=22fix2"></iframe>
   </section>
-  <script src="sheet.js?v=22perf1" defer></script>
+  <script src="sheet.js?v=22fix2" defer></script>
   <div class="modal-overlay" id="modal" hidden>
     <section class="modal" role="dialog"
       aria-modal="true" aria-labelledby="modal-title">
@@ -49,11 +49,17 @@
           placeholder="Enter URL" inputmode="url" required>
 
         <label for="icon-source">Shortcut icon</label>
-        <select id="icon-source">
+        <select id="icon-source" class="icon-source-native">
           <option value="favicon">Website favicon</option>
           <option value="upload">Upload image</option>
-
         </select>
+        <div class="icon-source-picker" id="icon-source-picker">
+          <button type="button" id="icon-source-trigger" aria-haspopup="listbox" aria-expanded="false">Website favicon</button>
+          <div id="icon-source-menu" role="listbox" hidden>
+            <button type="button" role="option" data-source="favicon" aria-selected="true">Website favicon</button>
+            <button type="button" role="option" data-source="upload" aria-selected="false">Upload image</button>
+          </div>
+        </div>
         <div id="icon-upload-wrap" hidden>
           <label for="icon-upload">Choose an image (PNG, JPG or WebP)</label>
           <input id="icon-upload" type="file" accept="image/png,image/jpeg,image/webp">

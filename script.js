@@ -34,6 +34,36 @@ function updateIconEditor() {
   if (preview) iconPreview.src = preview;
 }
 iconSource.addEventListener("change", updateIconEditor);
+// Mirror the real select in a compact dropdown to avoid Android's full-screen picker.
+const iconSourceTrigger=document.getElementById("icon-source-trigger");
+const iconSourceMenu=document.getElementById("icon-source-menu");
+const iconSourcePicker=document.getElementById("icon-source-picker");
+function syncIconSourcePicker() {
+  iconSourceTrigger.textContent=iconSource.selectedOptions[0]?.textContent || "Website favicon";
+  iconSourceMenu.querySelectorAll("button").forEach(button=>{
+    button.setAttribute("aria-selected",String(button.dataset.source===iconSource.value));
+  });
+}
+function closeIconSourcePicker() {
+  iconSourceMenu.hidden=true;
+  iconSourceTrigger.setAttribute("aria-expanded","false");
+}
+iconSourceTrigger.addEventListener("click",()=>{
+  const open=iconSourceMenu.hidden;
+  iconSourceMenu.hidden=!open;
+  iconSourceTrigger.setAttribute("aria-expanded",String(open));
+});
+iconSourceMenu.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{
+  iconSource.value=button.dataset.source;
+  iconSource.dispatchEvent(new Event("change",{bubbles:true}));
+  closeIconSourcePicker();
+  iconSourceTrigger.focus();
+}));
+document.addEventListener("pointerdown",event=>{if(!iconSourcePicker.contains(event.target))closeIconSourcePicker();});
+iconSourceTrigger.addEventListener("keydown",event=>{if(event.key==="Escape")closeIconSourcePicker();});
+iconSource.addEventListener("change",syncIconSourcePicker);
+syncIconSourcePicker();
+
 
 urlInput.addEventListener("input", () => { if(iconSource.value === "favicon") updateIconEditor(); });
 iconUpload.addEventListener("change", async () => {
@@ -142,6 +172,8 @@ function openModal(index = null) {
   iconUpload.value = "";
 
   iconSource.value = site?.iconData ? "upload" : "favicon";
+  syncIconSourcePicker();
+  closeIconSourcePicker();
   updateIconEditor();
   modal.hidden = false;
 
