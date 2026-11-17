@@ -498,3 +498,8 @@ html, body { background-color: #000; }
 #wallpaper-image { position: absolute !important; inset: 0 !important; z-index: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; opacity: 1 !important; visibility: visible !important; }
 #wallpaper-layer::after { z-index: 1; }
 main { position: relative; z-index: 2; background: transparent !important; }
+
+/* Build restore8: return to v2.1 CSS wallpaper, with no image or pseudo overlay. */
+#wallpaper-layer {position:fixed!important;inset:0!important;z-index:1!important;display:block!important;visibility:visible!important;opacity:1!important;background-color:transparent!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;isolation:auto!important;}
+#wallpaper-layer::after {content:none!important;display:none!important;}
+main {position:relative!important;z-index:2!important;background:transparent!important;}

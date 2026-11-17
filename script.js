@@ -575,37 +575,20 @@ const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
 let currentWallpaperImage = null;
 let wallpaperDarkness = 35;
 window.applyNtpWallpaper = applyWallpaper;
-window.applyNtpWallpaperDarkness = value => {
-  wallpaperDarkness = Math.max(0, Math.min(90, Number(value) || 0));
-  const layer = document.getElementById("wallpaper-layer");
-  if (layer) layer.style.setProperty("--wallpaper-darkness", String(wallpaperDarkness / 100));
-};
+// Restore the proven v2.1 wallpaper rendering path, avoiding image-layer compositing.
 function applyWallpaper() {
   const layer = document.getElementById("wallpaper-layer");
   if (!layer) return;
   let wallpaper = {};
   try { wallpaper = JSON.parse(localStorage.getItem(WALLPAPER_KEY)) || {}; } catch {}
   const image = typeof wallpaper.image === "string" && /^data:image\/(jpeg|png|webp);base64,/.test(wallpaper.image) ? wallpaper.image : "";
-  if (image !== currentWallpaperImage) {
-    const imageElement = document.getElementById("wallpaper-image");
-    if (imageElement) {
-      if (image) {
-        imageElement.onload = () => { window.ntpureWallpaperImageStatus = 'Loaded '+imageElement.naturalWidth+'×'+imageElement.naturalHeight; };
-        imageElement.onerror = () => { window.ntpureWallpaperImageStatus = 'Image decode failed'; };
-        window.ntpureWallpaperImageStatus = 'Loading image';
-        imageElement.src = image;
-        imageElement.hidden = false;
-      } else {
-        window.ntpureWallpaperImageStatus = 'No wallpaper selected';
-        imageElement.removeAttribute("src");
-        imageElement.hidden = true;
-      }
-    }
-    currentWallpaperImage = image;
-  }
-  layer.classList.toggle("has-wallpaper", Boolean(image));
-  window.applyNtpWallpaperDarkness(wallpaper.darkness ?? 35);
+  const darkness = Math.min(90, Math.max(0, Number(wallpaper.darkness ?? 35) || 0)) / 100;
+  layer.style.backgroundImage = image
+    ? `linear-gradient(rgba(0,0,0,${darkness}),rgba(0,0,0,${darkness})),url("${image}")`
+    : "none";
 }
+window.applyNtpWallpaper = applyWallpaper;
+window.applyNtpWallpaperDarkness = () => applyWallpaper();
 window.addEventListener("storage", event => {
   if (event.key === WALLPAPER_KEY) applyWallpaper();
   if (event.key === SETTINGS_KEY) {
