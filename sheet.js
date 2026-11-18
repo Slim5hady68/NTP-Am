@@ -39,7 +39,7 @@
     }
   });
   function reportWallpaperStatus(target, origin) {
-    const img = document.getElementById('wallpaper-image');
+    const img = document.getElementById('ntpure-wallpaper-photo');
     const layer = document.getElementById('wallpaper-layer');
     const rect = img?.getBoundingClientRect();
     const imageState = !img?.getAttribute('src') ? 'No image source' : img.complete ? (img.naturalWidth ? 'Image decoded' : 'Image decode failed') : 'Image still loading';

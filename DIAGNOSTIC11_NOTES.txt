@@ -1,0 +1,1 @@
+Diagnostic 11: Fixes wallpaper status check to inspect #ntpure-wallpaper-photo, the actual image element created by script.js. No change to saved shortcuts or wallpaper data.
