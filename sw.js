@@ -1,6 +1,6 @@
 /* NTPure Web v2.0: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpure-2.2-wallpaper-restore9';
+const VERSION = 'ntpure-2.1-speeddrag2';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js', './settings-ui.js', './wallpaper.js'];
@@ -43,32 +43,16 @@ async function cacheIcon(request) {
     throw error;
   }
 }
-// Fast cache-first rendering with a background refresh for next navigation.
-// Unlike the old cache-first logic, refresh cached assets in the background.
-async function shellResponse(request, event) {
+async function shellResponse(request) {
   const cache = await caches.open(SHELL_CACHE);
   const stored = await cache.match(request, { ignoreSearch: true });
-  const refresh = (async () => {
-    const response = await fetch(request, { cache: 'no-store' });
-    if (response.ok) await cache.put(request, response.clone()).catch(() => {});
-    return response;
-  })();
-  if (stored && request.mode === 'navigate') {
-    event.waitUntil(refresh.catch(() => {}));
+  if (stored) {
+    // Display the cached page immediately; refresh it for the next visit.
     return stored;
   }
-  // For JS, CSS and settings, prefer the current network response to avoid stale assets.
-  if (stored) {
-    try { return await refresh; } catch { return stored; }
-  }
-  try { return await refresh; }
-  catch (error) {
-    if (request.mode === 'navigate') {
-      const fallback = await cache.match('./index.html');
-      if (fallback) return fallback;
-    }
-    throw error;
-  }
+  const response = await fetch(request);
+  if (response.ok && response.type === 'basic') await cache.put(request, response.clone()).catch(() => {});
+  return response;
 }
 self.addEventListener('fetch', event => {
   const request = event.request;
@@ -82,6 +66,6 @@ self.addEventListener('fetch', event => {
   const scope = new URL(self.registration.scope);
   if (!url.pathname.startsWith(scope.pathname)) return;
   if (request.mode === 'navigate' || APP_FILES.some(file => new URL(file, scope).pathname === url.pathname)) {
-    event.respondWith(shellResponse(request, event));
+    event.respondWith(shellResponse(request));
   }
 });

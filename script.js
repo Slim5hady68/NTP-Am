@@ -34,36 +34,6 @@ function updateIconEditor() {
   if (preview) iconPreview.src = preview;
 }
 iconSource.addEventListener("change", updateIconEditor);
-// Mirror the real select in a compact dropdown to avoid Android's full-screen picker.
-const iconSourceTrigger=document.getElementById("icon-source-trigger");
-const iconSourceMenu=document.getElementById("icon-source-menu");
-const iconSourcePicker=document.getElementById("icon-source-picker");
-function syncIconSourcePicker() {
-  iconSourceTrigger.textContent=iconSource.selectedOptions[0]?.textContent || "Website favicon";
-  iconSourceMenu.querySelectorAll("button").forEach(button=>{
-    button.setAttribute("aria-selected",String(button.dataset.source===iconSource.value));
-  });
-}
-function closeIconSourcePicker() {
-  iconSourceMenu.hidden=true;
-  iconSourceTrigger.setAttribute("aria-expanded","false");
-}
-iconSourceTrigger.addEventListener("click",()=>{
-  const open=iconSourceMenu.hidden;
-  iconSourceMenu.hidden=!open;
-  iconSourceTrigger.setAttribute("aria-expanded",String(open));
-});
-iconSourceMenu.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{
-  iconSource.value=button.dataset.source;
-  iconSource.dispatchEvent(new Event("change",{bubbles:true}));
-  closeIconSourcePicker();
-  iconSourceTrigger.focus();
-}));
-document.addEventListener("pointerdown",event=>{if(!iconSourcePicker.contains(event.target))closeIconSourcePicker();});
-iconSourceTrigger.addEventListener("keydown",event=>{if(event.key==="Escape")closeIconSourcePicker();});
-iconSource.addEventListener("change",syncIconSourcePicker);
-syncIconSourcePicker();
-
 
 urlInput.addEventListener("input", () => { if(iconSource.value === "favicon") updateIconEditor(); });
 iconUpload.addEventListener("change", async () => {
@@ -172,8 +142,6 @@ function openModal(index = null) {
   iconUpload.value = "";
 
   iconSource.value = site?.iconData ? "upload" : "favicon";
-  syncIconSourcePicker();
-  closeIconSourcePicker();
   updateIconEditor();
   modal.hidden = false;
 
@@ -257,7 +225,7 @@ removeButton.addEventListener("click", () => {
 // The page remains usable when service workers are unsupported.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' }).then(reg => reg.update().catch(() => {})).catch(() => {});
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
   });
 }
 
@@ -280,7 +248,7 @@ function makeIcon(site) {
   img.alt = "";
   img.decoding = "async";
   img.loading = "eager";
-  img.fetchPriority = "auto";
+  img.fetchPriority = "high";
   img.onerror = () => {
     img.remove();
     icon.textContent = site.name.charAt(0).toUpperCase();
@@ -289,7 +257,7 @@ function makeIcon(site) {
   // The service worker caches favicon responses where supported. Ignore completion
   // if the shortcut was replaced or removed in the meantime.
   if (site.iconData || site.iconUrl) img.src = site.iconData || site.iconUrl;
-  else img.src = remoteFavicon(host); // Avoid an unnecessary promise/microtask for each favicon.
+  else getIconUrl(host).then(url => { if (img.parentNode === icon) img.src = url; });
   return icon;
 }
 
@@ -328,13 +296,19 @@ function render() {
       slot.addEventListener("click", () => openModal(i));
     } else {
       slot.dataset.siteUrl = site.url;
+      // Native links let the browser recognise a destination immediately.
+      const link = document.createElement("a");
+      link.href = site.url;
+      link.className = "shortcut-link";
+      link.setAttribute("aria-label", `Open ${site.name}`);
       slot.dataset.iconKey = site.iconData || site.iconUrl || "";
       const cachedIcon = previousIcons.get(site.url + "|" + (site.iconData || site.iconUrl || ""));
-      slot.append(cachedIcon || makeIcon(site));
-      previousIcons.delete(site.url + "|" + (site.iconData || site.iconUrl || ""));
+      link.append(cachedIcon || makeIcon(site));
+      previousIcons.delete(site.url);
 
       label.textContent = site.name;
-      slot.appendChild(label);
+      link.appendChild(label);
+      slot.appendChild(link);
 
       // Hold to drag. The editor never opens from a stationary hold.
       let pointerId = null;
@@ -427,7 +401,7 @@ function render() {
       slot.addEventListener("pointerdown", event => {
         if (editMode || event.button !== 0 || pointerId !== null || !modal.hidden) return;
         pointerId = event.pointerId;
-        // Keep touch events directed to the shortcut throughout the hold and drag.
+        // Capture from pointerdown to retain reliable drag tracking in Android WebView.
         try { slot.setPointerCapture(event.pointerId); } catch {}
         startX = event.clientX;
         startY = event.clientY;
@@ -482,8 +456,8 @@ function render() {
         if (event.pointerType === "touch" || pointerId !== null) return;
         if (modal.hidden) openModal(i);
       });
-      slot.addEventListener("click", event => {
-        if (suppressClick || !modal.hidden) {
+      link.addEventListener("click", event => {
+        if (suppressClick || armed || moving || !modal.hidden) {
           event.preventDefault();
           return;
         }
@@ -492,9 +466,9 @@ function render() {
           openModal(i);
           return;
         }
-        // Navigate on the first tap; no 350ms double-tap wait.
-        window.location.assign(site.url);
+        // Let the browser follow the native anchor directly.
       });
+      link.addEventListener("keydown", event => { if (event.key === " " && editMode) { event.preventDefault(); openModal(i); } });
     }
 
     fragment.appendChild(slot);
@@ -513,7 +487,6 @@ const clockDate = document.getElementById("clock-date");
 let preferences = { showClock: true, gridColumns: 4, iconSize: "medium", showLabels: true, iconStyle: "floating" };
 
 function loadPreferences() {
-  const oldLayout = `${preferences.gridColumns}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch {}
   preferences.showClock = typeof saved.showClock === "boolean" ? saved.showClock : true;
@@ -525,8 +498,7 @@ function loadPreferences() {
   scheduleClock();
   applyShortcutAppearance();
   applyWallpaper();
-  const newLayout = `${preferences.gridColumns}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
-  if (!shortcuts.children.length || oldLayout !== newLayout) render();
+  render();
 }
 function applyShortcutAppearance() {
   shortcuts.style.setProperty("--grid-columns", String(preferences.gridColumns));
@@ -572,20 +544,15 @@ document.addEventListener("visibilitychange", scheduleClock);
 
 // Keep the New Tab page in sync when the extension popup changes preferences.
 const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
-// Restore the proven v2.1 wallpaper rendering path, avoiding image-layer compositing.
+window.applyNtpWallpaper = applyWallpaper;
 function applyWallpaper() {
   const layer = document.getElementById("wallpaper-layer");
   if (!layer) return;
   let wallpaper = {};
   try { wallpaper = JSON.parse(localStorage.getItem(WALLPAPER_KEY)) || {}; } catch {}
   const image = typeof wallpaper.image === "string" && /^data:image\/(jpeg|png|webp);base64,/.test(wallpaper.image) ? wallpaper.image : "";
-  const darkness = Math.min(90, Math.max(0, Number(wallpaper.darkness ?? 35) || 0)) / 100;
-  layer.style.backgroundImage = image
-    ? `linear-gradient(rgba(0,0,0,${darkness}),rgba(0,0,0,${darkness})),url("${image}")`
-    : "none";
+  layer.style.backgroundImage = image ? `linear-gradient(rgba(0,0,0,${Math.min(90,Math.max(0,Number(wallpaper.darkness ?? 35)))/100}),rgba(0,0,0,${Math.min(90,Math.max(0,Number(wallpaper.darkness ?? 35)))/100})),url("${image}")` : "none";
 }
-window.applyNtpWallpaper = applyWallpaper;
-window.applyNtpWallpaperDarkness = () => applyWallpaper();
 window.addEventListener("storage", event => {
   if (event.key === WALLPAPER_KEY) applyWallpaper();
   if (event.key === SETTINGS_KEY) {
@@ -599,21 +566,3 @@ loadPreferences();
 
 window.addEventListener('resize',()=>{if(editMode)positionEditModeBar();});
 if('ResizeObserver' in window) new ResizeObserver(()=>{if(editMode)positionEditModeBar();}).observe(document.getElementById('shortcuts'));
-
-// Optional local diagnostic: append ?perf=1 to the page URL and view the console.
-if (new URLSearchParams(location.search).has('perf')) {
-  const measure = () => {
-    const nav = performance.getEntriesByType('navigation')[0];
-    console.info('[NTPure performance]', {
-      domReadyMs: Math.round(nav?.domContentLoadedEventEnd ?? 0),
-      loadMs: Math.round(nav?.loadEventEnd ?? 0),
-      shortcuts: document.querySelectorAll('#shortcuts .slot').length,
-      wallpaperEnabled: Boolean(currentWallpaperImage)
-    });
-  };
-  window.addEventListener('load', () => setTimeout(measure, 0), {once:true});
-  document.getElementById('shortcuts').addEventListener('click', event => {
-    const slot = event.target.closest('.slot[data-site-url]');
-    if (slot) console.info('[NTPure performance] Shortcut click dispatched', performance.now().toFixed(1), slot.dataset.siteUrl);
-  }, {capture:true});
-}
