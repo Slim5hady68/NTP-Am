@@ -21,52 +21,44 @@ function updatePreview(){
 }
 const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';updatePreview();};
 function persist() {try {if(state.image)localStorage.setItem(KEY,JSON.stringify(state));else localStorage.removeItem(KEY);window.parent.postMessage({type:'ntpam-wallpaper-updated'},location.origin);status.textContent='Background saved.';return true;}catch{status.textContent='Not enough browser storage. Try a smaller wallpaper or export a backup.';return false;}}
+// Preserve the original JPEG/PNG/WebP bytes. No canvas or bitmap conversion:
+// some Android WebViews decode photos but return black pixels from canvas.
 fileInput.addEventListener('change',async()=>{
- const file=fileInput.files?.[0];if(!file){status.textContent='No image selected.';return;}
- status.textContent='Processing '+file.name+'…';
- if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>12*1024*1024){status.textContent='Choose a PNG, JPG or WebP under 12 MB.';return;}
- try {
-  // Android WebViews may not implement createImageBitmap; decode via Image instead.
-  // Keep the original file URL alive until drawing and encoding are complete.
-  const objectURL=URL.createObjectURL(file);
-  let data;
-  try {
-    const image=await new Promise((resolve,reject)=>{
-      const img=new Image();
-      img.onload=()=>resolve(img);
-      img.onerror=()=>reject(new Error('Unable to read this image.'));
-      img.src=objectURL;
-    });
-    if(image.decode) await image.decode().catch(()=>{});
-    const maxSide=1000,scale=Math.min(1,maxSide/Math.max(image.naturalWidth,image.naturalHeight));
-    const canvas=document.createElement('canvas');
-    canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
-    canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
-    const ctx=canvas.getContext('2d',{willReadFrequently:true});
-    if(!ctx)throw Error('Canvas unavailable in this browser.');
-    ctx.drawImage(image,0,0,canvas.width,canvas.height);
-    // Sample pixels from across the canvas before saving, not merely dimensions.
-    const locations=[[.15,.15],[.5,.15],[.85,.15],[.15,.5],[.5,.5],[.85,.5],[.15,.85],[.5,.85],[.85,.85]];
-    let bright=0;
-    for(const [x,y] of locations){
-      const px=ctx.getImageData(Math.min(canvas.width-1,Math.floor(x*canvas.width)),Math.min(canvas.height-1,Math.floor(y*canvas.height)),1,1).data;
-      if(px[3]>0 && Math.max(px[0],px[1],px[2])>18)bright++;
-    }
-    if(bright===0)throw Error('Canvas produced a black image. Nothing was saved. Please try a different browser or image.');
-    data=canvas.toDataURL('image/jpeg',.72);
-    if(data.length>1100000){
-      const scale2=Math.min(1,700/Math.max(canvas.width,canvas.height));
-      const small=document.createElement('canvas');
-      small.width=Math.max(1,Math.round(canvas.width*scale2));small.height=Math.max(1,Math.round(canvas.height*scale2));
-      small.getContext('2d').drawImage(canvas,0,0,small.width,small.height);
-      data=small.toDataURL('image/jpeg',.60);
-    }
-    if(!/^data:image\/jpeg;base64,/.test(data)||data.length>1100000)throw Error('Image encoding failed or is too large.');
-  } finally {
-    URL.revokeObjectURL(objectURL);
-  }
-  const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();status.textContent='Wallpaper saved. Applying background…';
- }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to process this wallpaper.');console.error('NTPure wallpaper upload:',e);}
+ const file=fileInput.files?.[0];
+ if(!file){status.textContent='No image selected.';return;}
+ if(!['image/png','image/jpeg','image/webp'].includes(file.type)){
+  status.textContent='Choose a JPG, PNG or WebP image.';return;
+ }
+ // LocalStorage can be limited to around 5 MiB; reject large originals rather
+ // than silently replacing the current wallpaper or exhausting shortcut storage.
+ const MAX_BYTES=3*1024*1024;
+ if(file.size>MAX_BYTES){
+  status.textContent='Photo is too large for direct storage (3 MB maximum). Choose a smaller image or use your phone’s photo editor to save a reduced copy.';
+  return;
+ }
+ status.textContent='Reading original photo without canvas…';
+ try{
+  const data=await new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>resolve(reader.result);
+   reader.onerror=()=>reject(new Error('Could not read selected photo.'));
+   reader.readAsDataURL(file);
+  });
+  if(typeof data!=='string'||!/^data:image\/(jpeg|png|webp);base64,/.test(data))throw Error('Invalid image data.');
+  // Check decoding in an actual image element before touching saved storage.
+  const dimensions=await new Promise((resolve,reject)=>{
+   const test=new Image();
+   test.onload=()=>resolve([test.naturalWidth,test.naturalHeight]);
+   test.onerror=()=>reject(new Error('The original photo could not be displayed.'));
+   test.src=data;
+  });
+  if(!dimensions[0]||!dimensions[1])throw Error('Photo has no visible dimensions.');
+  const previous=state.image;
+  state.image=data;
+  if(!persist()){state.image=previous;return;}
+  update();
+  status.textContent='Original photo saved ('+dimensions.join(' × ')+'). Checking background…';
+ }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to read this photo.');}
 });
 window.addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==window.parent)return;

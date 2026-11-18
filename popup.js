@@ -102,7 +102,7 @@ function validateBackup(data) {
   let wallpaper=null;
   if (data.wallpaper != null) {
     const w=data.wallpaper;
-    if (typeof w !== 'object' || typeof w.image !== 'string' || w.image.length>1100000 || !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(w.image) || !Number.isFinite(Number(w.darkness)) || Number(w.darkness)<0 || Number(w.darkness)>90) throw new Error('Invalid wallpaper in backup.');
+    if (typeof w !== 'object' || typeof w.image !== 'string' || w.image.length>4300000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(w.image) || !Number.isFinite(Number(w.darkness)) || Number(w.darkness)<0 || Number(w.darkness)>90) throw new Error('Invalid wallpaper in backup.');
     wallpaper={image:w.image,darkness:Number(w.darkness)};
   }
   return { shortcuts, preferences, wallpaper };
