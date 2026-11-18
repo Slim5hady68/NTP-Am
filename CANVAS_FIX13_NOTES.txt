@@ -1,0 +1,1 @@
+Canvas Fix 13: Keeps original image object URL alive through canvas draw and JPEG encoding; samples pixels before saving and reports black conversion instead of claiming success. Retains saved shortcuts and wallpaper.

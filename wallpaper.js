@@ -27,24 +27,44 @@ fileInput.addEventListener('change',async()=>{
  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>12*1024*1024){status.textContent='Choose a PNG, JPG or WebP under 12 MB.';return;}
  try {
   // Android WebViews may not implement createImageBitmap; decode via Image instead.
+  // Keep the original file URL alive until drawing and encoding are complete.
   const objectURL=URL.createObjectURL(file);
-  let image;
+  let data;
   try {
-    image=await new Promise((resolve,reject)=>{
+    const image=await new Promise((resolve,reject)=>{
       const img=new Image();
       img.onload=()=>resolve(img);
       img.onerror=()=>reject(new Error('Unable to read this image.'));
       img.src=objectURL;
     });
-  } finally {URL.revokeObjectURL(objectURL);}
-  const maxSide=1000,scale=Math.min(1,maxSide/Math.max(image.naturalWidth,image.naturalHeight));
-  const canvas=document.createElement('canvas');
-  canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
-  canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
-  canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
-  let data=canvas.toDataURL('image/jpeg',.72);
-  if(data.length>1100000){const s=Math.min(1,700/Math.max(canvas.width,canvas.height));const small=document.createElement('canvas');small.width=Math.round(canvas.width*s);small.height=Math.round(canvas.height*s);small.getContext('2d').drawImage(canvas,0,0,small.width,small.height);data=small.toDataURL('image/jpeg',.60);}
-  if(data.length>1100000)throw Error('Image too large after optimisation.');
+    if(image.decode) await image.decode().catch(()=>{});
+    const maxSide=1000,scale=Math.min(1,maxSide/Math.max(image.naturalWidth,image.naturalHeight));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
+    canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});
+    if(!ctx)throw Error('Canvas unavailable in this browser.');
+    ctx.drawImage(image,0,0,canvas.width,canvas.height);
+    // Sample pixels from across the canvas before saving, not merely dimensions.
+    const locations=[[.15,.15],[.5,.15],[.85,.15],[.15,.5],[.5,.5],[.85,.5],[.15,.85],[.5,.85],[.85,.85]];
+    let bright=0;
+    for(const [x,y] of locations){
+      const px=ctx.getImageData(Math.min(canvas.width-1,Math.floor(x*canvas.width)),Math.min(canvas.height-1,Math.floor(y*canvas.height)),1,1).data;
+      if(px[3]>0 && Math.max(px[0],px[1],px[2])>18)bright++;
+    }
+    if(bright===0)throw Error('Canvas produced a black image. Nothing was saved. Please try a different browser or image.');
+    data=canvas.toDataURL('image/jpeg',.72);
+    if(data.length>1100000){
+      const scale2=Math.min(1,700/Math.max(canvas.width,canvas.height));
+      const small=document.createElement('canvas');
+      small.width=Math.max(1,Math.round(canvas.width*scale2));small.height=Math.max(1,Math.round(canvas.height*scale2));
+      small.getContext('2d').drawImage(canvas,0,0,small.width,small.height);
+      data=small.toDataURL('image/jpeg',.60);
+    }
+    if(!/^data:image\/jpeg;base64,/.test(data)||data.length>1100000)throw Error('Image encoding failed or is too large.');
+  } finally {
+    URL.revokeObjectURL(objectURL);
+  }
   const previous=state.image;state.image=data;if(!persist()){state.image=previous;return;}update();status.textContent='Wallpaper saved. Applying background…';
  }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to process this wallpaper.');console.error('NTPure wallpaper upload:',e);}
 });
