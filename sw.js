@@ -1,6 +1,6 @@
 /* NTPure Web v2.0: same-origin app shell and cross-origin favicon caching. */
 'use strict';
-const VERSION = 'ntpure-2.2-release';
+const VERSION = 'ntpure-2.2-final-fast';
 const SHELL_CACHE = VERSION + '-shell';
 const ICON_CACHE = VERSION + '-icons';
 const APP_FILES = ['./', './index.html', './style.css', './script.js', './settings.html', './popup.css', './popup.js', './sheet.js', './settings-ui.js', './wallpaper.js'];
@@ -43,9 +43,23 @@ async function cacheIcon(request) {
     throw error;
   }
 }
-// Prefer fresh shell files; use cached copies only while offline.
-async function shellResponse(request) {
+// Fast repeat visits: serve the installed shell immediately, then refresh it
+// in the background for the next visit. The versioned install precache ensures
+// a new deployment gets a fresh shell when the new worker activates.
+async function shellResponse(request, event) {
   const cache = await caches.open(SHELL_CACHE);
+  const stored = await cache.match(request, { ignoreSearch: true });
+  if (stored) {
+    event.waitUntil((async () => {
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response.ok && response.type === 'basic') {
+          await cache.put(request, response.clone());
+        }
+      } catch (_) { /* Remain usable offline. */ }
+    })());
+    return stored;
+  }
   try {
     const response = await fetch(request, { cache: 'no-store' });
     if (response.ok && response.type === 'basic') {
@@ -53,8 +67,6 @@ async function shellResponse(request) {
     }
     return response;
   } catch (error) {
-    const stored = await cache.match(request, { ignoreSearch: true });
-    if (stored) return stored;
     if (request.mode === 'navigate') {
       const fallback = await cache.match('./index.html');
       if (fallback) return fallback;
@@ -74,6 +86,6 @@ self.addEventListener('fetch', event => {
   const scope = new URL(self.registration.scope);
   if (!url.pathname.startsWith(scope.pathname)) return;
   if (request.mode === 'navigate' || APP_FILES.some(file => new URL(file, scope).pathname === url.pathname)) {
-    event.respondWith(shellResponse(request));
+    event.respondWith(shellResponse(request, event));
   }
 });

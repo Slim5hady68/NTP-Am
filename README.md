@@ -117,3 +117,7 @@ The 3 MB limit helps control local browser-storage usage because original images
 **Icon concept credit: DrumDestroyer**
 
 *Minimalist by design. Personalised by you.*
+
+### Startup performance
+
+The v2.2 release uses a versioned, precached app shell for fast repeat tab openings, with a background refresh for newer files. On first installation or after a service-worker update, a network load may still be required. Browser toolbar controls (including the + New Tab button) are managed by the browser, not by NTPure.
