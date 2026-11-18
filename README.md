@@ -1,6 +1,6 @@
 # NTPure — Minimalist Customisable New Tab Page
 
-**Version 2.1** · **Authored by JT26-AI**
+**Version 2.2 (test)** · **Authored by JT26-AI**
 
 NTPure is a lightweight, customisable New Tab Page with an optional true-black AMOLED background or your own wallpaper. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -93,7 +93,7 @@ Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, J
 
 Uploaded wallpapers are stored in your browser and included in exported JSON backups. Keep a backup before clearing browser data.
 
-## What's New in v2.1
+## What's New in v2.2 (performance test)
 
 - Upload a custom wallpaper and adjust its darkness using a live slider.
 - Keep pure AMOLED black as the default.
@@ -102,9 +102,13 @@ Uploaded wallpapers are stored in your browser and included in exported JSON bac
 
 ## Credits
 
-**NTPure v2.1**  
+**NTPure v2.2 (performance test)**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 
 *Minimalist by design. Personalised by you.*
 
+
+## v2.2 Performance Test Notes
+
+This is an experimental build based on the stable v2.1 release. It retains the original JavaScript shortcut navigation and touch/drag code. Changes include synchronous favicon URL assignment, avoiding redundant shortcut grid rebuilding on unchanged preferences, separate wallpaper darkness overlay, writing wallpaper data only after a slider adjustment finishes, and optional local console timing with `?perf=1`. These changes have not been benchmarked in BareBrowser; retain a backup and compare with v2.1 before replacing the stable release.
