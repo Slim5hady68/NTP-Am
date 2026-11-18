@@ -9,7 +9,17 @@ const output=document.getElementById('wallpaper-percent');
 const status=document.getElementById('wallpaper-status');
 let state={image:'',darkness:35};
 try {const stored=JSON.parse(localStorage.getItem(KEY));if(stored && typeof stored==='object')state={image:typeof stored.image==='string'?stored.image:'',darkness:Number.isFinite(Number(stored.darkness))?Math.max(0,Math.min(90,Number(stored.darkness))):35};}catch{}
-const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';};
+const previewImage=document.getElementById('wallpaper-preview-image');
+const previewMessage=document.getElementById('wallpaper-preview-message');
+function updatePreview(){
+ if(!state.image){previewImage.style.display='none';previewImage.removeAttribute('src');previewMessage.textContent='No wallpaper stored';return;}
+ previewMessage.textContent='Saved image found; checking preview…';
+ previewImage.onload=()=>{previewImage.style.display='block';previewMessage.textContent='Preview loaded: '+previewImage.naturalWidth+' × '+previewImage.naturalHeight;};
+ previewImage.onerror=()=>{previewImage.style.display='none';previewMessage.textContent='Preview could not decode saved image';};
+ if(previewImage.src!==state.image)previewImage.src=state.image;
+ else if(previewImage.complete && previewImage.naturalWidth)previewImage.onload();
+}
+const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';updatePreview();};
 function persist() {try {if(state.image)localStorage.setItem(KEY,JSON.stringify(state));else localStorage.removeItem(KEY);window.parent.postMessage({type:'ntpam-wallpaper-updated'},location.origin);status.textContent='Background saved.';return true;}catch{status.textContent='Not enough browser storage. Try a smaller wallpaper or export a backup.';return false;}}
 fileInput.addEventListener('change',async()=>{
  const file=fileInput.files?.[0];if(!file){status.textContent='No image selected.';return;}

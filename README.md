@@ -112,3 +112,7 @@ Uploaded wallpapers are stored in your browser and included in exported JSON bac
 ## v2.2 Performance Test Notes
 
 This is an experimental build based on the stable v2.1 release. It retains the original JavaScript shortcut navigation and touch/drag code. Changes include synchronous favicon URL assignment, avoiding redundant shortcut grid rebuilding on unchanged preferences, separate wallpaper darkness overlay, writing wallpaper data only after a slider adjustment finishes, and optional local console timing with `?perf=1`. These changes have not been benchmarked in BareBrowser; retain a backup and compare with v2.1 before replacing the stable release.
+
+
+## Preview Test 12
+Adds a photo preview directly in Settings to distinguish saved-image decoding from wallpaper compositing. Does not alter saved settings.
