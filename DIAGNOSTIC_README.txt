@@ -1,1 +1,0 @@
-NTPure wallpaper image display diagnostic build 2.2-diag6. Upload extracted files to main branch root. Upload wallpaper, then read Display check message beneath wallpaper controls and report it. Does not delete local settings.
