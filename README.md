@@ -10,16 +10,16 @@ NTPure is a lightweight, customisable New Tab Page with an optional true-black A
 
 <p align="center">
   <a href="images/smoked-glass.png"><img src="images/smoked-glass.png" alt="NTPure Smoked Glass shortcuts" width="30%"></a>
-  <a href="images/settings.png"><img src="images/settings.png" alt="NTPure appearance settings" width="30%"></a>
+  <a href="images/settings.png"><img src="images/settings.png" alt="NTPure settings with expandable Shortcut Grid Layout controls" width="30%"></a>
   <a href="images/shortcut-editor.png"><img src="images/shortcut-editor.png" alt="NTPure shortcut editor" width="30%"></a>
 </p>
-<p align="center"><sub>Smoked Glass icons · Appearance settings · Shortcut editor (tap an image for full size)</sub></p>
+<p align="center"><sub>Smoked Glass icons · Grid layout settings · Shortcut editor (tap an image for full size)</sub></p>
 
 ## Features
 
 - **Three icon styles:** Floating (borderless), Uniform Rounded Tiles, and Smoked Glass with glossy reflections and dimensional shading.
 - **Customisable shortcut icons:** Personalise each shortcut icon individually using its website favicon or your own PNG/JPG/WebP image.
-- **Flexible shortcut grid:** Choose 4, 5 or 6 columns, small/medium/large icons, and optional website labels.
+- **Flexible shortcut grid:** Choose 4, 5 or 6 columns and 1, 2 or 3 rows, move the grid higher or lower with a vertical position slider, and adjust icon size and optional website labels.
 - **Drag-and-drop ordering:** Press and hold a shortcut to rearrange it.
 - **Optional clock and date:** Show or hide them in Settings.
 - **Discreet settings panel:** A 12px grey cog opens a slide-up panel; close it using × or by tapping outside.
@@ -71,7 +71,9 @@ Tap the small grey cog in the bottom-right corner. Under **Icon style**, choose:
 | **Uniform Rounded Tiles** | Consistent rounded-square icon backgrounds |
 | **Smoked Glass** | Glossy, smoky circular icons with highlights and depth |
 
-You can also change the number of grid columns, icon size, label visibility, and clock/date display. Your choices are saved automatically.
+Open **Shortcut Grid Layout** under **Shortcut appearance** to expand the layout controls. Choose **4, 5 or 6 columns**, **1, 2 or 3 rows**, and use the **Vertical position** slider to move the shortcut grid higher or lower on the screen. Choosing fewer rows hides extra shortcuts without deleting them. Tap the layout box again to collapse it.
+
+You can also change icon size, label visibility, and clock/date display. Your choices are saved automatically.
 
 ### Back up and restore
 
