@@ -1,1 +1,0 @@
-v2.2 Direct Photo Fix 14: reads original JPEG/PNG/WebP with FileReader; bypasses canvas completely. Maximum 3 MiB original file. Backup validation accepts matching image types and sizes. No stored shortcuts or wallpaper data is cleared.
