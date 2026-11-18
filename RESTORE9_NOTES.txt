@@ -1,1 +1,0 @@
-Corrected wallpaper restoration build 2.2-restore9. Upload extracted files to main root. Previous restore8 was not reliable. Preserves browser localStorage.
