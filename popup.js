@@ -2,8 +2,8 @@
 const STORAGE_KEY = "amoled-ntp-shortcuts-v2";
 const SETTINGS_KEY = "ntp-am-settings-v1";
 const WALLPAPER_KEY = "ntp-am-wallpaper-v1";
-const TOTAL_SLOTS = 12;
-const DEFAULT_PREFS = {showClock:true, gridColumns:4, iconSize:"medium", showLabels:true, iconStyle:"floating"};
+const TOTAL_SLOTS = 18;
+const DEFAULT_PREFS = {showClock:true, gridColumns:4, gridRows:2, gridPosition:66, iconSize:"medium", showLabels:true, iconStyle:"floating"};
 const showClock = document.getElementById("show-clock");
 const backupInput = document.getElementById("backup-file");
 const status = document.getElementById("status");
@@ -14,6 +14,8 @@ function readPreferences() {
   return {
     showClock: typeof saved.showClock === "boolean" ? saved.showClock : true,
     gridColumns: [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4,
+    gridRows: [1,2,3].includes(Number(saved.gridRows)) ? Number(saved.gridRows) : 2,
+    gridPosition: Number.isFinite(Number(saved.gridPosition)) && Number(saved.gridPosition)>=25 && Number(saved.gridPosition)<=80 ? Number(saved.gridPosition) : 66,
     iconSize: ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium",
     showLabels: typeof saved.showLabels === "boolean" ? saved.showLabels : true,
     iconStyle: ["floating","tiles","glass"].includes(saved.iconStyle) ? saved.iconStyle : "floating"
@@ -36,6 +38,15 @@ function updateColumnButtons(value) {
     button.setAttribute("aria-pressed", String(selected));
   });
 }
+const rowButtons = [...document.querySelectorAll('[data-rows]')];
+function updateRowButtons(value) { rowButtons.forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.rows)===Number(value)))); }
+updateRowButtons(readPreferences().gridRows);
+rowButtons.forEach(b=>b.addEventListener('click',()=>{const value=Number(b.dataset.rows);savePreference('gridRows',value);updateRowButtons(value);}));
+const positionSlider=document.getElementById('grid-position');
+const positionOutput=document.getElementById('grid-position-value');
+function syncPosition(value){positionSlider.value=value;positionOutput.textContent=value<52?'Higher':value>70?'Lower':'Centre';}
+syncPosition(readPreferences().gridPosition);
+positionSlider.addEventListener('input',()=>{syncPosition(Number(positionSlider.value));savePreference('gridPosition',Number(positionSlider.value));});
 const iconSizeSelect = document.getElementById("icon-size");
 const labelsToggle = document.getElementById("show-labels");
 const iconStyleSelect = document.getElementById("icon-style");
@@ -72,7 +83,7 @@ function exportBackup() {
 document.getElementById("export-backup").addEventListener("click", exportBackup);
 document.getElementById("choose-backup").addEventListener("click", () => { backupInput.value = ""; backupInput.click(); });
 function validateBackup(data) {
-  if (!data || !["NTPure", "NTP-Am"].includes(data.app) || data.backupVersion !== 1 || !Array.isArray(data.shortcuts) || ![8, 10, 12].includes(data.shortcuts.length)) throw new Error("This is not a valid NTPure or NTP-Am backup.");
+  if (!data || !["NTPure", "NTP-Am"].includes(data.app) || data.backupVersion !== 1 || !Array.isArray(data.shortcuts) || ![8, 10, 12, 18].includes(data.shortcuts.length)) throw new Error("This is not a valid NTPure or NTP-Am backup.");
   const shortcuts = data.shortcuts.map(site => {
     if (site === null) return null;
     if (!site || typeof site.name !== "string" || typeof site.url !== "string") throw new Error("The backup contains an invalid shortcut.");
@@ -95,6 +106,8 @@ function validateBackup(data) {
   const preferences = {
     showClock: typeof raw.showClock === "boolean" ? raw.showClock : true,
     gridColumns: [4,5,6].includes(Number(raw.gridColumns)) ? Number(raw.gridColumns) : 4,
+    gridRows: [1,2,3].includes(Number(raw.gridRows)) ? Number(raw.gridRows) : 2,
+    gridPosition: Number.isFinite(Number(raw.gridPosition)) && Number(raw.gridPosition)>=25 && Number(raw.gridPosition)<=80 ? Number(raw.gridPosition) : 66,
     iconSize: ["small","medium","large"].includes(raw.iconSize) ? raw.iconSize : "medium",
     showLabels: typeof raw.showLabels === "boolean" ? raw.showLabels : true,
     iconStyle: ["floating","tiles","glass"].includes(raw.iconStyle) ? raw.iconStyle : "floating"
@@ -119,6 +132,8 @@ backupInput.addEventListener("change", async () => {
     if(restored.wallpaper)localStorage.setItem(WALLPAPER_KEY,JSON.stringify(restored.wallpaper));else localStorage.removeItem(WALLPAPER_KEY);
     showClock.checked = restored.preferences.showClock;
     updateColumnButtons(restored.preferences.gridColumns);
+    updateRowButtons(restored.preferences.gridRows);
+    syncPosition(restored.preferences.gridPosition);
     iconSizeSelect.value = restored.preferences.iconSize;
     labelsToggle.checked = restored.preferences.showLabels;
     iconStyleSelect.value = restored.preferences.iconStyle;

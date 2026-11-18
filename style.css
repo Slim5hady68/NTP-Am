@@ -24,7 +24,7 @@ main {
 
 .shortcuts {
   position: fixed;
-  top: 66%;
+  top: var(--grid-position, 66%);
   left: 0;
   transform: translateY(-50%);
   width: 100%;
@@ -33,6 +33,9 @@ main {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   justify-items: center;
   gap: 30px 4px;
+  max-height: calc(100dvh - 85px);
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .slot {

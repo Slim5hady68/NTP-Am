@@ -147,10 +147,23 @@
   body.panel-mode footer {padding-bottom:2px !important;}
   .wallpaper-upload-label {position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:29px!important;padding:3px!important;margin:0!important;border:1px solid #2b3a43;border-radius:9px;background:#151c22;color:#e9f3f8;font-size:12px!important;font-weight:600;cursor:pointer;overflow:hidden;}
   .wallpaper-upload-label input[type=file] {position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:100px;}
+  .grid-layout-details{border:1px solid #2b3a43;border-radius:10px;background:#11171c;margin:5px 0 8px;padding:0 10px 8px;}
+  .grid-layout-details:not([open]){padding-bottom:0;}
+  .grid-layout-details summary{cursor:pointer;list-style:none;padding:10px 2px;font-size:13px;font-weight:600;color:#e9f3f8;}
+  .grid-layout-details summary::-webkit-details-marker{display:none;}
+  .grid-layout-details summary:after{content:'⌄';float:right;color:#a2afb8;font-size:17px;}
+  .grid-layout-details[open] summary:after{content:'⌃';}
+  .grid-layout-details summary span{display:block;color:#94a3ad;font-size:10px;font-weight:400;margin-top:2px;}
+  .grid-layout-details .grid-choice{display:flex;}
+  .grid-layout-details .grid-choice-button{flex:1;}
+  .grid-position-title,.grid-position-ends{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#a2afb8;margin-top:9px;}
+  #grid-position{width:100%;accent-color:#64dfff;margin:8px 0 0;}
+  .grid-position-ends{font-size:10px;margin:0;}
+  .grid-layout-hint{display:block;margin-top:9px;color:#94a3ad;}
   </style><script>if(new URLSearchParams(location.search).has("panel"))document.addEventListener("DOMContentLoaded",()=>document.body.classList.add("panel-mode"));</script>
-  <script src="popup.js?v=22release" defer></script>
-  <script src="settings-ui.js?v=22release" defer></script>
-  <script src="wallpaper.js?v=22release" defer></script>
+  <script src="popup.js?v=22gridfinal" defer></script>
+  <script src="settings-ui.js?v=22gridfinal" defer></script>
+  <script src="wallpaper.js?v=22gridfinal" defer></script>
 </head>
 <body>
   
@@ -164,12 +177,25 @@
   </section>
   <section class="display-options">
     <h2>Shortcut appearance</h2>
+    <details class="grid-layout-details" id="grid-layout-details">
+      <summary>Shortcut Grid Layout <span>Rows, columns &amp; position</span></summary>
     <div class="grid-choice-label" id="grid-choice-label">Grid columns</div>
     <div class="grid-choice" role="group" aria-labelledby="grid-choice-label">
       <button type="button" class="grid-choice-button" data-columns="4" aria-pressed="true">4 columns</button>
       <button type="button" class="grid-choice-button" data-columns="5" aria-pressed="false">5 columns</button>
       <button type="button" class="grid-choice-button" data-columns="6" aria-pressed="false">6 columns</button>
     </div>
+    <div class="grid-choice-label" id="grid-row-label">Grid rows</div>
+    <div class="grid-choice" role="group" aria-labelledby="grid-row-label">
+      <button type="button" class="grid-choice-button" data-rows="1" aria-pressed="false">1 row</button>
+      <button type="button" class="grid-choice-button" data-rows="2" aria-pressed="true">2 rows</button>
+      <button type="button" class="grid-choice-button" data-rows="3" aria-pressed="false">3 rows</button>
+    </div>
+    <div class="grid-position-title"><label for="grid-position">Vertical position</label><output id="grid-position-value">Centre</output></div>
+    <input id="grid-position" type="range" min="25" max="80" step="1" value="66">
+    <div class="grid-position-ends"><span>Higher</span><span>Lower</span></div>
+    <small class="grid-layout-hint">Fewer rows hide extra shortcuts without deleting them.</small>
+    </details>
     <label for="icon-style">Icon style</label>
     <select id="icon-style"><option value="floating">Floating icons</option><option value="tiles">Uniform rounded tiles</option><option value="glass">Smoked Glass</option></select>
     <label for="icon-size">Icon size</label>

@@ -2,7 +2,7 @@
 "use strict";
 
 const STORAGE_KEY = "amoled-ntp-shortcuts-v2";
-const TOTAL_SLOTS = 12;
+const TOTAL_SLOTS = 18;
 
 const shortcuts = document.getElementById("shortcuts");
 const modal = document.getElementById("modal");
@@ -225,7 +225,7 @@ form.addEventListener("submit", event => {
 
   const index = editingIndex !== null
     ? editingIndex
-    : sites.findIndex((site, i) => i < preferences.gridColumns * 2 && site === null);
+    : sites.findIndex((site, i) => i < preferences.gridColumns * preferences.gridRows && site === null);
 
   if (index < 0) {
     error.textContent = "All visible shortcut slots are full.";
@@ -306,7 +306,7 @@ function render() {
   }
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < preferences.gridColumns * 2; i++) {
+  for (let i = 0; i < preferences.gridColumns * preferences.gridRows; i++) {
     const site = sites[i];
     const slot = document.createElement("div");
     slot.className = "slot";
@@ -510,14 +510,16 @@ const clockPanel = document.getElementById("clock-panel");
 const clockTime = document.getElementById("clock-time");
 const clockDate = document.getElementById("clock-date");
 
-let preferences = { showClock: true, gridColumns: 4, iconSize: "medium", showLabels: true, iconStyle: "floating" };
+let preferences = { showClock: true, gridColumns: 4, gridRows: 2, gridPosition: 66, iconSize: "medium", showLabels: true, iconStyle: "floating" };
 
 function loadPreferences() {
-  const oldLayout = `${preferences.gridColumns}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
+  const oldLayout = `${preferences.gridColumns}|${preferences.gridRows}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch {}
   preferences.showClock = typeof saved.showClock === "boolean" ? saved.showClock : true;
   preferences.gridColumns = [4,5,6].includes(Number(saved.gridColumns)) ? Number(saved.gridColumns) : 4;
+  preferences.gridRows = [1,2,3].includes(Number(saved.gridRows)) ? Number(saved.gridRows) : 2;
+  preferences.gridPosition = Number.isFinite(Number(saved.gridPosition)) && Number(saved.gridPosition) >= 25 && Number(saved.gridPosition) <= 80 ? Number(saved.gridPosition) : 66;
   preferences.iconSize = ["small","medium","large"].includes(saved.iconSize) ? saved.iconSize : "medium";
   preferences.showLabels = typeof saved.showLabels === "boolean" ? saved.showLabels : true;
   preferences.iconStyle = ["floating","tiles","glass"].includes(saved.iconStyle) ? saved.iconStyle : "floating";
@@ -525,11 +527,12 @@ function loadPreferences() {
   scheduleClock();
   applyShortcutAppearance();
   applyWallpaper();
-  const newLayout = `${preferences.gridColumns}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
+  const newLayout = `${preferences.gridColumns}|${preferences.gridRows}|${preferences.iconSize}|${preferences.iconStyle}|${preferences.showLabels}`;
   if (!shortcuts.children.length || oldLayout !== newLayout) render();
 }
 function applyShortcutAppearance() {
   shortcuts.style.setProperty("--grid-columns", String(preferences.gridColumns));
+  shortcuts.style.setProperty("--grid-position", String(preferences.gridPosition) + "%");
   shortcuts.dataset.iconSize = preferences.iconSize;
   shortcuts.dataset.iconStyle = preferences.iconStyle;
   shortcuts.classList.toggle("hide-labels", !preferences.showLabels);
