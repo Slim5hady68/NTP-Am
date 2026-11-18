@@ -9,17 +9,7 @@ const output=document.getElementById('wallpaper-percent');
 const status=document.getElementById('wallpaper-status');
 let state={image:'',darkness:35};
 try {const stored=JSON.parse(localStorage.getItem(KEY));if(stored && typeof stored==='object')state={image:typeof stored.image==='string'?stored.image:'',darkness:Number.isFinite(Number(stored.darkness))?Math.max(0,Math.min(90,Number(stored.darkness))):35};}catch{}
-const previewImage=document.getElementById('wallpaper-preview-image');
-const previewMessage=document.getElementById('wallpaper-preview-message');
-function updatePreview(){
- if(!state.image){previewImage.style.display='none';previewImage.removeAttribute('src');previewMessage.textContent='No wallpaper stored';return;}
- previewMessage.textContent='Saved image found; checking preview…';
- previewImage.onload=()=>{previewImage.style.display='block';previewMessage.textContent='Preview loaded: '+previewImage.naturalWidth+' × '+previewImage.naturalHeight;};
- previewImage.onerror=()=>{previewImage.style.display='none';previewMessage.textContent='Preview could not decode saved image';};
- if(previewImage.src!==state.image)previewImage.src=state.image;
- else if(previewImage.complete && previewImage.naturalWidth)previewImage.onload();
-}
-const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';updatePreview();};
+const update=()=>{controls.hidden=!state.image;slider.value=String(state.darkness);output.textContent=state.darkness+'%';};
 function persist() {try {if(state.image)localStorage.setItem(KEY,JSON.stringify(state));else localStorage.removeItem(KEY);window.parent.postMessage({type:'ntpam-wallpaper-updated'},location.origin);status.textContent='Background saved.';return true;}catch{status.textContent='Not enough browser storage. Try a smaller wallpaper or export a backup.';return false;}}
 // Preserve the original JPEG/PNG/WebP bytes. No canvas or bitmap conversion:
 // some Android WebViews decode photos but return black pixels from canvas.
@@ -57,19 +47,11 @@ fileInput.addEventListener('change',async()=>{
   state.image=data;
   if(!persist()){state.image=previous;return;}
   update();
-  status.textContent='Original photo saved ('+dimensions.join(' × ')+'). Checking background…';
+  status.textContent='Wallpaper saved ('+dimensions.join(' × ')+').';
  }catch(e){status.textContent='Upload failed: '+(e?.message||'Unable to read this photo.');}
-});
-window.addEventListener('message',event=>{
- if(event.origin!==location.origin||event.source!==window.parent)return;
- if(event.data?.type==='ntpure-wallpaper-diagnostic') {status.textContent='Display check: '+event.data.detail;return;}
- if(event.data?.type!=='ntpure-wallpaper-applied')return;
- status.textContent=event.data.visible?'Wallpaper detected. Checking image…':'Wallpaper not detected on main page.';
- window.parent.postMessage({type:'ntpure-wallpaper-check'},location.origin);
 });
 remove.addEventListener('click' ,()=>{state.image='';persist();update();});
 slider.addEventListener('input',()=>{state.darkness=Number(slider.value);output.textContent=state.darkness+'%';window.parent.postMessage({type:'ntpure-wallpaper-dim',value:state.darkness},location.origin);});
 slider.addEventListener('change',()=>{state.darkness=Number(slider.value);persist();});
 update();
-setTimeout(()=>window.parent.postMessage({type:'ntpure-wallpaper-check'},location.origin),500);
 })();

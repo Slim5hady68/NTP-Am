@@ -1,6 +1,6 @@
 # NTPure — Minimalist Customisable New Tab Page
 
-**Version 2.2 (test)** · **Authored by JT26-AI**
+**Version 2.2** · **Authored by JT26-AI**
 
 NTPure is a lightweight, customisable New Tab Page with an optional true-black AMOLED background or your own wallpaper. Keep your favourite websites within reach, arrange shortcuts your way, and enjoy a clean interface without a built-in search bar or unnecessary clutter.
 
@@ -24,7 +24,7 @@ NTPure is a lightweight, customisable New Tab Page with an optional true-black A
 - **Optional clock and date:** Show or hide them in Settings.
 - **Discreet settings panel:** A 12px grey cog opens a slide-up panel; close it using × or by tapping outside.
 - **Backup and restore:** Export shortcuts, icon choices, uploaded icon images, wallpapers, and preferences to a JSON file.
-- **Custom wallpaper:** Upload a background image and adjust its darkness with a slider; AMOLED black remains the default.
+- **Custom wallpaper:** Upload a JPG, PNG or WebP background image up to 3 MB without canvas processing, and adjust its darkness with a slider; AMOLED black remains the default.
 - **Local storage and caching:** Your setup stays in your browser, while service-worker caching can improve repeat load times.
 
 ## Moving from NTP-Am to NTPure
@@ -93,26 +93,27 @@ Open **Settings → Background** and tap **Upload wallpaper** to choose a PNG, J
 
 Uploaded wallpapers are stored in your browser and included in exported JSON backups. Keep a backup before clearing browser data.
 
-## What's New in v2.2 (performance test)
+## What's New in v2.2
 
-- Upload a custom wallpaper and adjust its darkness using a live slider.
-- Keep pure AMOLED black as the default.
-- Simplified shortcut icons to website favicons or image uploads.
-- Include uploaded wallpaper images and darkness preferences in backups.
+- Performance improvements to shortcut rendering and wallpaper darkness updates; existing shortcut drag-and-drop and settings are retained.
+- Updated app-shell caching: request current files online, with cached copies available when offline.
+- Restored reliable wallpaper uploads on BareBrowser by reading the original JPG, PNG or WebP file directly, without canvas processing.
+- Removed temporary wallpaper diagnostic controls and preview.
+
+## Wallpaper uploads: 3 MB limit and canvas-blocking compatibility
+
+**Wallpaper photos must be JPG, PNG or WebP files no larger than 3 MB (3 × 1024 × 1024 bytes).** This limit applies to wallpaper uploads, not shortcut icons. Larger images are rejected without replacing the existing wallpaper. If necessary, reduce the image size using your phone's photo editor before uploading.
+
+NTPure deliberately **bypasses HTML canvas processing for wallpaper uploads**. Some privacy-focused browsers, including the user's BareBrowser setup, can block or restrict canvas readback; in testing, this resulted in black converted wallpaper images. Version 2.2 reads the original image file directly and stores it locally without canvas resizing or compression. This avoids the observed canvas-blocking failure and keeps the upload compatible with browsers that restrict canvas access.
+
+The 3 MB limit helps control local browser-storage usage because original images are stored as base64 data URLs (which use more space than the source file). Actual available storage depends on the browser and other saved data. If an upload fails due to storage limits, choose a smaller file. Export a backup before clearing browser site data.
+
+**Note:** The BareBrowser canvas-blocking explanation is consistent with the observed tests, but a specific browser-update change has not been independently verified.
 
 ## Credits
 
-**NTPure v2.2 (performance test)**  
+**NTPure v2.2**  
 **Authored by JT26-AI**  
 **Icon concept credit: DrumDestroyer**
 
 *Minimalist by design. Personalised by you.*
-
-
-## v2.2 Performance Test Notes
-
-This is an experimental build based on the stable v2.1 release. It retains the original JavaScript shortcut navigation and touch/drag code. Changes include synchronous favicon URL assignment, avoiding redundant shortcut grid rebuilding on unchanged preferences, separate wallpaper darkness overlay, writing wallpaper data only after a slider adjustment finishes, and optional local console timing with `?perf=1`. These changes have not been benchmarked in BareBrowser; retain a backup and compare with v2.1 before replacing the stable release.
-
-
-## Preview Test 12
-Adds a photo preview directly in Settings to distinguish saved-image decoding from wallpaper compositing. Does not alter saved settings.
