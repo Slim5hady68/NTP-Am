@@ -1,1 +1,0 @@
-Render Fix 10: Native IMG wallpaper renderer, network-first service worker, and versioned script/css. Export a backup before any browser data changes. Do not clear site data.
