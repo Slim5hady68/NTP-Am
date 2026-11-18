@@ -1,5 +1,0 @@
-NTPure v2.2 layer and startup speed test (2.2-layer7).
-Wallpaper layer explicitly above page background and below shortcuts.
-Cache-first startup with background refresh; offline fallback preserved.
-No changes to wallpaper storage, shortcuts, or drag/drop.
-Upload extracted files to GitHub main root.
