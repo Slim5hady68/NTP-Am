@@ -147,13 +147,17 @@
   body.panel-mode footer {padding-bottom:2px !important;}
   .wallpaper-upload-label {position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:29px!important;padding:3px!important;margin:0!important;border:1px solid #2b3a43;border-radius:9px;background:#151c22;color:#e9f3f8;font-size:12px!important;font-weight:600;cursor:pointer;overflow:hidden;}
   .wallpaper-upload-label input[type=file] {position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:100px;}
-  .grid-layout-details{border:1px solid #2b3a43;border-radius:10px;background:#11171c;margin:5px 0 8px;padding:0 10px 8px;}
+  .grid-layout-details{border:1px solid #3b515e;border-radius:10px;background:#131c23;margin:7px 0 12px;padding:0 10px 8px;}
   .grid-layout-details:not([open]){padding-bottom:0;}
-  .grid-layout-details summary{cursor:pointer;list-style:none;padding:10px 2px;font-size:13px;font-weight:600;color:#e9f3f8;}
+  .grid-layout-details summary{position:relative;display:block;cursor:pointer;list-style:none;padding:11px 32px 11px 4px;font-size:13px;font-weight:600;color:#f0f7fb;min-height:44px;box-sizing:border-box;}
   .grid-layout-details summary::-webkit-details-marker{display:none;}
-  .grid-layout-details summary:after{content:'⌄';float:right;color:#a2afb8;font-size:17px;}
+  .grid-layout-details summary:after{content:'⌄';position:absolute;right:5px;top:50%;transform:translateY(-50%);color:#c3d9e5;font-size:22px;line-height:1;float:none;}
   .grid-layout-details[open] summary:after{content:'⌃';}
-  .grid-layout-details summary span{display:block;color:#94a3ad;font-size:10px;font-weight:400;margin-top:2px;}
+  .grid-layout-details summary span{display:block;color:#a6b8c4;font-size:10px;font-weight:400;margin-top:3px;}
+  /* Clear separation between the settings surface and interactive dropdowns. */
+  .display-options .custom-select > button{border:1px solid #425764!important;background:#19242c!important;}
+  .display-options .custom-select > button:focus-visible,.grid-layout-details summary:focus-visible{outline:2px solid #64dfff;outline-offset:2px;}
+  .grid-layout-details[open]{border-color:#506b79;}
   .grid-layout-details .grid-choice{display:flex;}
   .grid-layout-details .grid-choice-button{flex:1;}
   .grid-position-title,.grid-position-ends{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#a2afb8;margin-top:9px;}
